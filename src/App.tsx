@@ -88,6 +88,9 @@ function App() {
                             <h1 className="font-display text-xl md:text-3xl font-bold tracking-tight text-[var(--text-primary)] leading-tight min-w-0 break-words">
                                 AI Hackathon Guide
                             </h1>
+                            <p className="mt-1 text-xs md:text-sm text-[var(--text-muted)]">
+                                Created by Ayomide Aremu-Cole
+                            </p>
                             <p className="mt-2 md:mt-3 text-sm text-[var(--text-secondary)] leading-relaxed">
                                 A curated list of tools and resources to help
                                 you build AI applications faster.
