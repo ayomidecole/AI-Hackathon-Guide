@@ -99,7 +99,7 @@ function App() {
 
       {/* Main content */}
       <main id="sections" className="flex-1 min-w-0 md:pl-[min(320px,26vw)] relative z-0">
-        <div className="max-w-4xl mx-auto py-10 md:py-14 px-6 md:px-10">
+        <div className="w-full py-10 md:py-14 px-6 md:px-10">
           <div className="text-right text-xs text-[var(--text-muted)] mb-2">
             Work highlights
           </div>

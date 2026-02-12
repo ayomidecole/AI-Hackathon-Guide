@@ -14,7 +14,7 @@ export function SectionPanel({ section, isOpen, onToggle, children }: SectionPan
   return (
     <div
       className={clsx(
-        'rounded-2xl border transition-all duration-300 overflow-hidden',
+        'border transition-all duration-300 overflow-hidden',
         'hover:opacity-[0.98]',
         isOpen && 'shadow-lg'
       )}

@@ -31,7 +31,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-stretch gap-3">
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => setIndex((i) => Math.max(0, i - 1))}
