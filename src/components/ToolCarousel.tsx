@@ -25,19 +25,6 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
   const minSwipeDistance = 48;
 
   useEffect(() => {
-    if (toolCount > 0 && index > toolCount - 1) {
-      setIndex(toolCount - 1);
-      return;
-    }
-
-    if (toolCount === 0) {
-      if (index !== 0) setIndex(0);
-      if (pendingIndex !== null) setPendingIndex(null);
-      if (animationStage !== 'idle') setAnimationStage('idle');
-    }
-  }, [toolCount, index, pendingIndex, animationStage]);
-
-  useEffect(() => {
     if (animationStage !== 'out') return;
 
     const timer = window.setTimeout(() => {
