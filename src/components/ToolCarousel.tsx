@@ -92,6 +92,30 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
         </div>
       </div>
 
+      <div className="space-y-2">
+        <p className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+          Homepage preview
+        </p>
+        <div
+          className="rounded-xl border overflow-hidden"
+          style={{
+            backgroundColor: 'var(--bg-card)',
+            borderColor: 'var(--border-muted)',
+          }}
+        >
+          <iframe
+            src={current.url}
+            title={`${current.name} homepage`}
+            loading="lazy"
+            className="block w-full h-56 md:h-72"
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+        </div>
+        <p className="text-xs text-[var(--text-muted)]">
+          If the preview is blocked, open the website in a new tab.
+        </p>
+      </div>
+
       {/* Dots + counter: visible on desktop only (mobile has inline dots above) */}
       <div className="hidden md:flex items-center justify-center gap-3">
         <div className="flex gap-1.5">
