@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Tool } from '../content/sections';
@@ -8,11 +8,63 @@ interface ToolCarouselProps {
   tools: Tool[];
 }
 
+const EXIT_DURATION_MS = 170;
+const ENTER_DURATION_MS = 220;
+
 export function ToolCarousel({ tools }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
+  const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
+  const [animationStage, setAnimationStage] = useState<'idle' | 'out' | 'in'>('idle');
+  const toolCount = tools.length;
+  const activeIndex = toolCount === 0 ? 0 : Math.min(index, toolCount - 1);
+  const hasPrev = activeIndex > 0;
+  const hasNext = activeIndex < toolCount - 1;
+  const isAnimating = animationStage !== 'idle';
+  const minSwipeDistance = 48;
 
-  if (tools.length === 0) {
+  useEffect(() => {
+    if (toolCount > 0 && index > toolCount - 1) {
+      setIndex(toolCount - 1);
+      return;
+    }
+
+    if (toolCount === 0) {
+      if (index !== 0) setIndex(0);
+      if (pendingIndex !== null) setPendingIndex(null);
+      if (animationStage !== 'idle') setAnimationStage('idle');
+    }
+  }, [toolCount, index, pendingIndex, animationStage]);
+
+  useEffect(() => {
+    if (animationStage !== 'out') return;
+
+    const timer = window.setTimeout(() => {
+      if (pendingIndex === null) {
+        setAnimationStage('idle');
+        return;
+      }
+
+      setIndex(pendingIndex);
+      setAnimationStage('in');
+    }, EXIT_DURATION_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [animationStage, pendingIndex]);
+
+  useEffect(() => {
+    if (animationStage !== 'in') return;
+
+    const timer = window.setTimeout(() => {
+      setAnimationStage('idle');
+      setPendingIndex(null);
+    }, ENTER_DURATION_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [animationStage]);
+
+  if (toolCount === 0) {
     return (
       <div className="py-12 text-center text-[var(--text-muted)] text-sm">
         More tools coming soon…
@@ -20,17 +72,25 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
     );
   }
 
-  const current = tools[index];
-  const hasPrev = index > 0;
-  const hasNext = index < tools.length - 1;
-  const minSwipeDistance = 48;
+  const current = tools[activeIndex];
+
+  const navigateTo = (nextIndex: number) => {
+    if (isAnimating) return;
+
+    const clamped = Math.max(0, Math.min(toolCount - 1, nextIndex));
+    if (clamped === activeIndex) return;
+
+    setSlideDirection(clamped > activeIndex ? 1 : -1);
+    setPendingIndex(clamped);
+    setAnimationStage('out');
+  };
 
   const goPrev = () => {
-    setIndex((i) => Math.max(0, i - 1));
+    navigateTo(activeIndex - 1);
   };
 
   const goNext = () => {
-    setIndex((i) => Math.min(tools.length - 1, i + 1));
+    navigateTo(activeIndex + 1);
   };
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
@@ -44,6 +104,8 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
   };
 
   const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (isAnimating) return;
+
     const start = swipeStartRef.current;
     swipeStartRef.current = null;
     if (!start || event.changedTouches.length === 0) return;
@@ -69,6 +131,17 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
     color: 'var(--text-secondary)',
   };
 
+  const cardAnimationClass =
+    animationStage === 'out'
+      ? slideDirection === 1
+        ? 'tool-card-slide-out-left'
+        : 'tool-card-slide-out-right'
+      : animationStage === 'in'
+        ? slideDirection === 1
+          ? 'tool-card-slide-in-right'
+          : 'tool-card-slide-in-left'
+        : '';
+
   return (
     <div className="flex flex-col gap-6 max-md:gap-4">
       {/* Desktop: Prev | Card | Next. Mobile: Card on top, then Prev + dots + Next */}
@@ -76,7 +149,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
         <button
           type="button"
           onClick={goPrev}
-          disabled={!hasPrev}
+          disabled={!hasPrev || isAnimating}
           className="hidden md:flex shrink-0 w-10 h-10 rounded-xl items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none"
           style={navButtonStyle}
           aria-label="Previous tool"
@@ -84,7 +157,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
           <ChevronLeft className="w-5 h-5" strokeWidth={2} />
         </button>
         <div
-          className="flex-1 min-w-0 max-md:order-first"
+          className={clsx('flex-1 min-w-0 max-md:order-first', cardAnimationClass)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           style={{ touchAction: 'pan-y' }}
@@ -95,7 +168,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
           <button
             type="button"
             onClick={goPrev}
-            disabled={!hasPrev}
+            disabled={!hasPrev || isAnimating}
             className="md:hidden shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
             style={navButtonStyle}
             aria-label="Previous tool"
@@ -108,26 +181,27 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
                 <button
                   key={i}
                   type="button"
-                  onClick={() => setIndex(i)}
+                  onClick={() => navigateTo(i)}
+                  disabled={isAnimating}
                   className={clsx(
-                    'rounded-full transition-all duration-200 touch-manipulation',
-                    i === index ? 'w-2.5 h-2.5' : 'w-2 h-2 opacity-70'
+                    'rounded-full transition-all duration-200 touch-manipulation disabled:pointer-events-none',
+                    i === activeIndex ? 'w-2.5 h-2.5' : 'w-2 h-2 opacity-70'
                   )}
                   style={{
-                    backgroundColor: i === index ? 'var(--dot-active)' : 'var(--dot-inactive)',
+                    backgroundColor: i === activeIndex ? 'var(--dot-active)' : 'var(--dot-inactive)',
                   }}
                   aria-label={`Go to tool ${i + 1}`}
                 />
               ))}
             </div>
             <span className="text-xs text-[var(--text-muted)] tabular-nums">
-              {index + 1}/{tools.length}
+              {activeIndex + 1}/{toolCount}
             </span>
           </div>
           <button
             type="button"
             onClick={goNext}
-            disabled={!hasNext}
+            disabled={!hasNext || isAnimating}
             className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
             style={navButtonStyle}
             aria-label="Next tool"
@@ -144,20 +218,21 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
             <button
               key={i}
               type="button"
-              onClick={() => setIndex(i)}
+              onClick={() => navigateTo(i)}
+              disabled={isAnimating}
               className={clsx(
-                'rounded-full transition-all duration-200',
-                i === index ? 'w-2.5 h-2.5' : 'w-2 h-2 opacity-70 hover:opacity-100'
+                'rounded-full transition-all duration-200 disabled:pointer-events-none',
+                i === activeIndex ? 'w-2.5 h-2.5' : 'w-2 h-2 opacity-70 hover:opacity-100'
               )}
               style={{
-                backgroundColor: i === index ? 'var(--dot-active)' : 'var(--dot-inactive)',
+                backgroundColor: i === activeIndex ? 'var(--dot-active)' : 'var(--dot-inactive)',
               }}
               aria-label={`Go to tool ${i + 1}`}
             />
           ))}
         </div>
         <span className="text-xs text-[var(--text-muted)] tabular-nums">
-          {index + 1} / {tools.length}
+          {activeIndex + 1} / {toolCount}
         </span>
       </div>
     </div>
