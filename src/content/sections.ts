@@ -12,6 +12,7 @@ export interface Section {
   id: string;
   title: string;
   tools: Tool[];
+  contributors?: string[];
 }
 
 export const sections: Section[] = [
@@ -154,5 +155,11 @@ export const sections: Section[] = [
         url: "https://platform.openai.com",
       },
     ],
+  },
+  {
+    id: "contributors",
+    title: "Contributors",
+    tools: [],
+    contributors: ["Created by Ayomide Aremu-Cole"],
   },
 ];
