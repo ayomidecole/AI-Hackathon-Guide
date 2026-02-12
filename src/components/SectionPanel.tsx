@@ -16,12 +16,11 @@ export function SectionPanel({
     onToggle,
     children,
 }: SectionPanelProps) {
+    const hasTools = section.tools.length > 0;
     const contributors = section.contributors ?? [];
-    const hasContributors = contributors.length > 0;
-    const itemCount = hasContributors
-        ? contributors.length
-        : section.tools.length;
-    const itemLabel = hasContributors ? 'contributor' : 'tool';
+    const showContributors = !hasTools && contributors.length > 0;
+    const itemCount = showContributors ? contributors.length : section.tools.length;
+    const itemLabel = showContributors ? 'contributor' : 'tool';
 
     return (
         <div

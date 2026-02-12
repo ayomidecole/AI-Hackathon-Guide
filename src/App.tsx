@@ -114,35 +114,43 @@ function App() {
                     >
                         <div className="w-full py-10 md:py-14 px-6 md:px-10 max-md:py-5 max-md:px-4">
                             <div className="space-y-4 max-md:space-y-3">
-                                {sections.map((section) => (
-                                    <SectionPanel
-                                        key={section.id}
-                                        section={section}
-                                        isOpen={openSectionId === section.id}
-                                        onToggle={() =>
-                                            toggleSection(section.id)
-                                        }
-                                    >
-                                        {section.contributors?.length ? (
-                                            <ul className="space-y-2">
-                                                {section.contributors.map(
-                                                    (contributor) => (
-                                                        <li
-                                                            key={contributor}
-                                                            className="text-sm text-[var(--text-secondary)]"
-                                                        >
-                                                            {contributor}
-                                                        </li>
-                                                    ),
-                                                )}
-                                            </ul>
-                                        ) : (
-                                            <ToolCarousel
-                                                tools={section.tools}
-                                            />
-                                        )}
-                                    </SectionPanel>
-                                ))}
+                                {sections.map((section) => {
+                                    const contributors =
+                                        section.contributors ?? [];
+                                    const hasTools = section.tools.length > 0;
+                                    const showContributors =
+                                        !hasTools && contributors.length > 0;
+
+                                    return (
+                                        <SectionPanel
+                                            key={section.id}
+                                            section={section}
+                                            isOpen={openSectionId === section.id}
+                                            onToggle={() =>
+                                                toggleSection(section.id)
+                                            }
+                                        >
+                                            {showContributors ? (
+                                                <ul className="space-y-2">
+                                                    {contributors.map(
+                                                        (contributor) => (
+                                                            <li
+                                                                key={contributor}
+                                                                className="text-sm text-[var(--text-secondary)]"
+                                                            >
+                                                                {contributor}
+                                                            </li>
+                                                        ),
+                                                    )}
+                                                </ul>
+                                            ) : (
+                                                <ToolCarousel
+                                                    tools={section.tools}
+                                                />
+                                            )}
+                                        </SectionPanel>
+                                    );
+                                })}
                             </div>
                         </div>
                     </main>
