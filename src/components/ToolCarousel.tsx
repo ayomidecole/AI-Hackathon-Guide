@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Tool } from '../content/sections';
@@ -10,6 +10,7 @@ interface ToolCarouselProps {
 
 export function ToolCarousel({ tools }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
+  const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
 
   if (tools.length === 0) {
     return (
@@ -22,6 +23,45 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
   const current = tools[index];
   const hasPrev = index > 0;
   const hasNext = index < tools.length - 1;
+  const minSwipeDistance = 48;
+
+  const goPrev = () => {
+    setIndex((i) => Math.max(0, i - 1));
+  };
+
+  const goNext = () => {
+    setIndex((i) => Math.min(tools.length - 1, i + 1));
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (event.touches.length !== 1) {
+      swipeStartRef.current = null;
+      return;
+    }
+
+    const touch = event.touches[0];
+    swipeStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const start = swipeStartRef.current;
+    swipeStartRef.current = null;
+    if (!start || event.changedTouches.length === 0) return;
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+
+    if (absX < minSwipeDistance || absX <= absY) return;
+
+    if (deltaX > 0) {
+      goPrev();
+    } else {
+      goNext();
+    }
+  };
 
   const navButtonStyle: React.CSSProperties = {
     backgroundColor: 'var(--bg-card)',
@@ -35,7 +75,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
       <div className="flex flex-col md:flex-row md:items-center gap-3">
         <button
           type="button"
-          onClick={() => setIndex((i) => Math.max(0, i - 1))}
+          onClick={goPrev}
           disabled={!hasPrev}
           className="hidden md:flex shrink-0 w-10 h-10 rounded-xl items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none"
           style={navButtonStyle}
@@ -43,13 +83,18 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
         >
           <ChevronLeft className="w-5 h-5" strokeWidth={2} />
         </button>
-        <div className="flex-1 min-w-0 max-md:order-first">
+        <div
+          className="flex-1 min-w-0 max-md:order-first"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          style={{ touchAction: 'pan-y' }}
+        >
           <ToolCard tool={current} />
         </div>
         <div className="flex items-center justify-center gap-2 max-md:gap-3">
           <button
             type="button"
-            onClick={() => setIndex((i) => Math.max(0, i - 1))}
+            onClick={goPrev}
             disabled={!hasPrev}
             className="md:hidden shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
             style={navButtonStyle}
@@ -81,7 +126,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
           </div>
           <button
             type="button"
-            onClick={() => setIndex((i) => Math.min(tools.length - 1, i + 1))}
+            onClick={goNext}
             disabled={!hasNext}
             className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
             style={navButtonStyle}
