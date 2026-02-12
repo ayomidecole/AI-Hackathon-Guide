@@ -8,8 +8,8 @@ interface ToolCarouselProps {
   tools: Tool[];
 }
 
-const EXIT_DURATION_MS = 170;
-const ENTER_DURATION_MS = 220;
+const EXIT_DURATION_MS = 180;
+const ENTER_DURATION_MS = 240;
 
 export function ToolCarousel({ tools }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
@@ -144,7 +144,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
           <ChevronLeft className="w-5 h-5" strokeWidth={2} />
         </button>
         <div
-          className={clsx('flex-1 min-w-0 max-md:order-first', cardAnimationClass)}
+          className={clsx('flex-1 min-w-0 overflow-hidden max-md:order-first', cardAnimationClass)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           style={{ touchAction: 'pan-y' }}
