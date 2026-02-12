@@ -88,12 +88,12 @@ function App() {
                             <h1 className="font-display text-xl md:text-3xl font-bold tracking-tight text-[var(--text-primary)] leading-tight min-w-0 break-words">
                                 AI Hackathon Guide
                             </h1>
-                            <p className="mt-1 text-xs md:text-sm text-[var(--text-muted)]">
-                                Created by Ayomide Aremu-Cole
-                            </p>
                             <p className="mt-2 md:mt-3 text-sm text-[var(--text-secondary)] leading-relaxed">
                                 A curated list of tools and resources to help
                                 you build AI applications faster.
+                            </p>
+                            <p className="mt-2 text-xs md:text-sm text-[var(--text-muted)]">
+                                Created by Ayomide Aremu-Cole
                             </p>
                             <div
                                 className="mt-6 md:mt-8 pt-4 md:pt-6 border-t"
@@ -102,6 +102,17 @@ function App() {
                                 <p className="text-xs text-[var(--text-muted)]">
                                     {sections.length} categories · Built for
                                     builders
+                                </p>
+                            </div>
+                            <div
+                                className="mt-4 pt-4 border-t"
+                                style={{ borderColor: 'var(--border-subtle)' }}
+                            >
+                                <p className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                                    Contributors
+                                </p>
+                                <p className="mt-2 text-sm text-[var(--text-secondary)]">
+                                    Created by Ayomide Aremu-Cole
                                 </p>
                             </div>
                         </div>
