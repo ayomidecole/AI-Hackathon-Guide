@@ -6,14 +6,18 @@ import { ToolCard } from './ToolCard';
 
 interface ToolCarouselProps {
   tools: Tool[];
+  /** When true and section just opened, carousel will take focus for keyboard nav */
+  isSectionOpen?: boolean;
 }
 
 const EXIT_DURATION_MS = 180;
 const ENTER_DURATION_MS = 240;
 
-export function ToolCarousel({ tools }: ToolCarouselProps) {
+export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
   const [cardExpanded, setCardExpanded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const prevSectionOpenRef = useRef(false);
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
@@ -56,6 +60,18 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
   useEffect(() => {
     setCardExpanded(false);
   }, [activeIndex]);
+
+  // Auto-focus when section opens so arrow keys work without an extra click
+  useEffect(() => {
+    const justOpened = isSectionOpen && !prevSectionOpenRef.current;
+    prevSectionOpenRef.current = isSectionOpen;
+    if (justOpened) {
+      const id = requestAnimationFrame(() => {
+        containerRef.current?.focus();
+      });
+      return () => cancelAnimationFrame(id);
+    }
+  }, [isSectionOpen]);
 
   if (toolCount === 0) {
     return (
@@ -153,6 +169,7 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
 
   return (
     <div
+      ref={containerRef}
       className="flex flex-col gap-6 max-md:gap-4 outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}

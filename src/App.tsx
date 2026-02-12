@@ -169,6 +169,10 @@ function App() {
                                             ) : (
                                                 <ToolCarousel
                                                     tools={section.tools}
+                                                    isSectionOpen={
+                                                        openSectionId ===
+                                                        section.id
+                                                    }
                                                 />
                                             )}
                                         </SectionPanel>
