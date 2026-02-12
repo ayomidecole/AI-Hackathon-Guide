@@ -80,6 +80,19 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
     navigateTo(activeIndex + 1);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goPrev();
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      goNext();
+    }
+  };
+
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     if (event.touches.length !== 1) {
       swipeStartRef.current = null;
@@ -130,7 +143,13 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
         : '';
 
   return (
-    <div className="flex flex-col gap-6 max-md:gap-4">
+    <div
+      className="flex flex-col gap-6 max-md:gap-4 outline-none"
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      role="region"
+      aria-label="Tool carousel"
+    >
       {/* Desktop: Prev | Card | Next. Mobile: Card on top, then Prev + dots + Next */}
       <div className="flex flex-col md:flex-row md:items-center gap-3">
         <button
