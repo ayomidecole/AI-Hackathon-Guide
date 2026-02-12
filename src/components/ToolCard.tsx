@@ -69,7 +69,7 @@ export function ToolCard({ tool }: ToolCardProps) {
                 className={clsx(
                     'border-t overflow-hidden transition-all duration-300 ease-out',
                     isExpanded
-                        ? 'max-h-[420px] opacity-100'
+                        ? 'max-h-[1200px] opacity-100'
                         : 'max-h-0 opacity-0',
                 )}
                 style={{ borderColor: 'var(--border-subtle)' }}
@@ -100,6 +100,31 @@ export function ToolCard({ tool }: ToolCardProps) {
                             ))}
                         </ul>
                     )}
+
+                    <div className="space-y-2">
+                        <p className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                            Homepage preview
+                        </p>
+                        <div
+                            className="rounded-xl border overflow-hidden"
+                            style={{
+                                backgroundColor: 'var(--bg-card)',
+                                borderColor: 'var(--border-muted)',
+                            }}
+                        >
+                            <iframe
+                                src={tool.url}
+                                title={`${tool.name} homepage`}
+                                loading="lazy"
+                                className="block w-full h-56 md:h-72"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                            />
+                        </div>
+                        <p className="text-xs text-[var(--text-muted)]">
+                            If the preview is blocked, open the website in a
+                            new tab.
+                        </p>
+                    </div>
 
                     <a
                         href={tool.url}
