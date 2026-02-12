@@ -5,10 +5,18 @@ import type { Tool } from '../content/sections';
 
 interface ToolCardProps {
     tool: Tool;
+    /** When provided, card expand/collapse is controlled by the parent (e.g. for keyboard). */
+    expanded?: boolean;
+    onExpandToggle?: (expanded: boolean) => void;
 }
 
-export function ToolCard({ tool }: ToolCardProps) {
-    const [isExpanded, setIsExpanded] = useState(false);
+export function ToolCard({ tool, expanded: controlledExpanded, onExpandToggle }: ToolCardProps) {
+    const [internalExpanded, setInternalExpanded] = useState(false);
+    const isControlled = controlledExpanded !== undefined && onExpandToggle !== undefined;
+    const isExpanded = isControlled ? controlledExpanded : internalExpanded;
+    const setIsExpanded = isControlled
+        ? (next: boolean) => onExpandToggle(next)
+        : setInternalExpanded;
 
     return (
         <div

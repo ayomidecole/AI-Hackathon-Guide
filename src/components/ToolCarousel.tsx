@@ -13,6 +13,7 @@ const ENTER_DURATION_MS = 240;
 
 export function ToolCarousel({ tools }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
+  const [cardExpanded, setCardExpanded] = useState(false);
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
@@ -50,6 +51,11 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
 
     return () => window.clearTimeout(timer);
   }, [animationStage]);
+
+  // Collapse details when changing to another tool
+  useEffect(() => {
+    setCardExpanded(false);
+  }, [activeIndex]);
 
   if (toolCount === 0) {
     return (
@@ -90,6 +96,9 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
       goNext();
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      setCardExpanded((prev) => !prev);
     }
   };
 
@@ -168,7 +177,11 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
           onTouchEnd={handleTouchEnd}
           style={{ touchAction: 'pan-y' }}
         >
-          <ToolCard tool={current} />
+          <ToolCard
+          tool={current}
+          expanded={cardExpanded}
+          onExpandToggle={setCardExpanded}
+        />
         </div>
         <div className="flex items-center justify-center gap-2 max-md:gap-3">
           <button
