@@ -59,7 +59,7 @@ export function SectionPanel({ section, isOpen, onToggle, children }: SectionPan
         )}
       >
         <div
-          className="p-5 md:p-6 pt-0 border-t max-md:p-4 max-md:pt-0"
+          className="p-5 md:p-6 pt-0 border-t max-md:p-4 max-md:pt-0 max-md:pt-4"
           style={{ borderColor: 'var(--border-subtle)' }}
         >
           {children}

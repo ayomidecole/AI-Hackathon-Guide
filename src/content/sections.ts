@@ -68,6 +68,36 @@ export const sections: Section[] = [
     ],
   },
   {
+    id: "auth",
+    title: "Auth",
+    tools: [
+      {
+        id: "clerk",
+        name: "Clerk",
+        tagline: "User management for modern apps",
+        description: "Drop-in components and APIs for authentication, user management, and session handling. Built for React and Next.js with a generous free tier.",
+        bullets: ["Pre-built components", "Next.js & React", "Free tier"],
+        url: "https://clerk.com",
+      },
+      {
+        id: "auth0",
+        name: "Auth0",
+        tagline: "Identity platform",
+        description: "Secure access for everyone. Add authentication and authorization to your apps with social logins, SSO, and MFA.",
+        bullets: ["Social & enterprise login", "SSO & MFA", "Universal Login"],
+        url: "https://auth0.com",
+      },
+      {
+        id: "nextauth",
+        name: "NextAuth",
+        tagline: "Auth for Next.js",
+        description: "Authentication for Next.js and Serverless. Supports OAuth, email, credentials, and custom providers with a simple API.",
+        bullets: ["OAuth & credentials", "Next.js native", "Open source"],
+        url: "https://next-auth.js.org",
+      },
+    ],
+  },
+  {
     id: "deployment",
     title: "Deployment",
     tools: [
