@@ -23,6 +23,12 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
   const hasPrev = index > 0;
   const hasNext = index < tools.length - 1;
 
+  const navButtonStyle: React.CSSProperties = {
+    backgroundColor: 'var(--bg-card)',
+    borderColor: 'var(--border-muted)',
+    color: 'var(--text-secondary)',
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-stretch gap-3">
@@ -30,12 +36,8 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
           type="button"
           onClick={() => setIndex((i) => Math.max(0, i - 1))}
           disabled={!hasPrev}
-          className={clsx(
-            'shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors',
-            'bg-white/[0.04] border-white/[0.08] text-[var(--text-secondary)]',
-            'hover:bg-white/[0.08] hover:text-[var(--text-primary)] hover:border-white/[0.12]',
-            'disabled:opacity-40 disabled:pointer-events-none'
-          )}
+          className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none"
+          style={navButtonStyle}
           aria-label="Previous tool"
         >
           <ChevronLeft className="w-5 h-5" strokeWidth={2} />
@@ -49,12 +51,8 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
           type="button"
           onClick={() => setIndex((i) => Math.min(tools.length - 1, i + 1))}
           disabled={!hasNext}
-          className={clsx(
-            'shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors',
-            'bg-white/[0.04] border-white/[0.08] text-[var(--text-secondary)]',
-            'hover:bg-white/[0.08] hover:text-[var(--text-primary)] hover:border-white/[0.12]',
-            'disabled:opacity-40 disabled:pointer-events-none'
-          )}
+          className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none"
+          style={navButtonStyle}
           aria-label="Next tool"
         >
           <ChevronRight className="w-5 h-5" strokeWidth={2} />
@@ -70,10 +68,11 @@ export function ToolCarousel({ tools }: ToolCarouselProps) {
               onClick={() => setIndex(i)}
               className={clsx(
                 'rounded-full transition-all duration-200',
-                i === index
-                  ? 'w-2.5 h-2.5 bg-cyan-400'
-                  : 'w-2 h-2 bg-white/30 hover:bg-white/50'
+                i === index ? 'w-2.5 h-2.5' : 'w-2 h-2 opacity-70 hover:opacity-100'
               )}
+              style={{
+                backgroundColor: i === index ? 'var(--dot-active)' : 'var(--dot-inactive)',
+              }}
               aria-label={`Go to tool ${i + 1}`}
             />
           ))}

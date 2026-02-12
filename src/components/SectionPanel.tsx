@@ -15,18 +15,18 @@ export function SectionPanel({ section, isOpen, onToggle, children }: SectionPan
     <div
       className={clsx(
         'rounded-2xl border transition-all duration-300 overflow-hidden',
-        'bg-white/[0.02] border-white/[0.06]',
-        'hover:border-white/[0.08] hover:bg-white/[0.03]',
-        isOpen && 'border-white/[0.1] bg-white/[0.04] shadow-lg shadow-black/20'
+        'hover:opacity-[0.98]',
+        isOpen && 'shadow-lg'
       )}
+      style={{
+        backgroundColor: isOpen ? 'var(--bg-card-hover)' : 'var(--bg-card)',
+        borderColor: isOpen ? 'var(--border-muted)' : 'var(--border-subtle)',
+        boxShadow: isOpen ? 'var(--shadow-panel)' : undefined,
+      }}
     >
       <button
         onClick={onToggle}
-        className={clsx(
-          'w-full flex items-center justify-between gap-4 p-5 md:p-6 text-left transition-colors',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]',
-          isOpen ? 'bg-white/[0.02]' : ''
-        )}
+        className="w-full flex items-center justify-between gap-4 p-5 md:p-6 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
       >
         <div className="min-w-0">
           <h2 className="text-lg md:text-xl font-semibold tracking-tight text-[var(--text-primary)] truncate">
@@ -39,10 +39,13 @@ export function SectionPanel({ section, isOpen, onToggle, children }: SectionPan
         <span
           className={clsx(
             'shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-colors',
-            isOpen
-              ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-              : 'bg-white/[0.06] border-white/[0.08] text-[var(--text-muted)]'
+            isOpen && 'border-[var(--accent)] text-[var(--accent)]'
           )}
+          style={{
+            backgroundColor: isOpen ? 'var(--accent-soft)' : 'var(--bg-card)',
+            borderColor: isOpen ? 'var(--accent-muted)' : 'var(--border-muted)',
+            color: isOpen ? undefined : 'var(--text-muted)',
+          }}
           aria-hidden
         >
           {isOpen ? <Minus className="w-4 h-4" strokeWidth={2} /> : <Plus className="w-4 h-4" strokeWidth={2} />}
@@ -55,7 +58,10 @@ export function SectionPanel({ section, isOpen, onToggle, children }: SectionPan
           isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
-        <div className="p-5 md:p-6 pt-0 border-t border-white/[0.06]">
+        <div
+          className="p-5 md:p-6 pt-0 border-t"
+          style={{ borderColor: 'var(--border-subtle)' }}
+        >
           {children}
         </div>
       </div>

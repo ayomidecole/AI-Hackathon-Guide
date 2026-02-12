@@ -13,9 +13,12 @@ export function ToolCard({ tool }: ToolCardProps) {
   return (
     <div
       className={clsx(
-        'rounded-2xl border bg-white/[0.03] border-white/[0.06] overflow-hidden',
-        'transition-colors duration-200 hover:border-white/[0.1] hover:bg-white/[0.04]'
+        'rounded-2xl border overflow-hidden transition-colors duration-200 hover:opacity-[0.98]'
       )}
+      style={{
+        backgroundColor: 'var(--bg-card)',
+        borderColor: 'var(--border-subtle)',
+      }}
     >
       <div className="p-5 flex flex-col">
         <div className="flex items-start gap-4">
@@ -23,10 +26,18 @@ export function ToolCard({ tool }: ToolCardProps) {
             <img
               src={tool.imageUrl}
               alt=""
-              className="w-12 h-12 rounded-xl object-cover bg-white/[0.06] shrink-0"
+              className="w-12 h-12 rounded-xl object-cover shrink-0"
+              style={{ backgroundColor: 'var(--bg-card-hover)' }}
             />
           ) : (
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-semibold text-lg shrink-0">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center font-semibold text-lg shrink-0 border"
+              style={{
+                backgroundColor: 'var(--accent-soft)',
+                borderColor: 'var(--accent-muted)',
+                color: 'var(--accent)',
+              }}
+            >
               {tool.name.charAt(0)}
             </div>
           )}
@@ -40,10 +51,8 @@ export function ToolCard({ tool }: ToolCardProps) {
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className={clsx(
-            'mt-4 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors',
-            'text-cyan-400/90 hover:text-cyan-400 hover:bg-cyan-500/5'
-          )}
+          className="mt-4 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-90"
+          style={{ color: 'var(--accent)' }}
         >
           <span>{isExpanded ? 'Less details' : 'More details'}</span>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -52,11 +61,15 @@ export function ToolCard({ tool }: ToolCardProps) {
 
       <div
         className={clsx(
-          'border-t border-white/[0.06] overflow-hidden transition-all duration-300 ease-out',
+          'border-t overflow-hidden transition-all duration-300 ease-out',
           isExpanded ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'
         )}
+        style={{ borderColor: 'var(--border-subtle)' }}
       >
-        <div className="p-5 pt-4 bg-black/20 space-y-4">
+        <div
+          className="p-5 pt-4 space-y-4"
+          style={{ backgroundColor: 'var(--bg-card-hover)' }}
+        >
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
             {tool.description}
           </p>
@@ -68,7 +81,7 @@ export function ToolCard({ tool }: ToolCardProps) {
                   key={idx}
                   className="text-sm text-[var(--text-secondary)] flex items-start gap-2"
                 >
-                  <span className="text-cyan-500/60 mt-0.5 shrink-0">•</span>
+                  <span className="mt-0.5 shrink-0" style={{ color: 'var(--accent)' }}>•</span>
                   <span>{bullet}</span>
                 </li>
               ))}
@@ -79,13 +92,14 @@ export function ToolCard({ tool }: ToolCardProps) {
             href={tool.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={clsx(
-              'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium',
-              'bg-white/[0.06] border border-white/[0.08] text-[var(--text-primary)]',
-              'hover:bg-white/[0.1] hover:border-white/[0.12] transition-colors'
-            )}
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors border hover:opacity-90"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              borderColor: 'var(--border-muted)',
+              color: 'var(--text-primary)',
+            }}
           >
-            Visit website <ExternalLink className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+            Visit website <ExternalLink className="w-3.5 h-3.5 opacity-70" />
           </a>
         </div>
       </div>
