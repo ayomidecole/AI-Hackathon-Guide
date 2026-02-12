@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { SectionPanel } from './components/SectionPanel';
 import { ToolCarousel } from './components/ToolCarousel';
 import { sections } from './content/sections';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Linkedin, Github } from 'lucide-react';
 
 const THEME_KEY = 'ai-hackathon-guide-theme';
 type Theme = 'light' | 'dark';
@@ -92,16 +92,35 @@ function App() {
                                 A curated list of tools and resources to help
                                 you build AI applications faster.
                             </p>
-                            <p className="mt-1 text-sm text-[var(--text-secondary)] leading-relaxed">
-                                Created by Ayomide Aremu-Cole
-                            </p>
                             <div
-                                className="mt-6 md:mt-8 pt-4 md:pt-6 border-t"
+                                className="mt-4 md:mt-5 pt-4 md:pt-5 border-t"
                                 style={{ borderColor: 'var(--border-subtle)' }}
                             >
-                                <p className="text-xs text-[var(--text-muted)]">
-                                    {sections.length} categories · Built for
-                                    builders
+                                <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                    Contributors
+                                </p>
+                                <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-semibold flex items-center gap-2 flex-wrap">
+                                    Created by Ayomide Aremu-Cole
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <a
+                                            href="https://www.linkedin.com/in/ayomidecole98/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                                            aria-label="Ayomide Aremu-Cole on LinkedIn"
+                                        >
+                                            <Linkedin className="w-4 h-4" />
+                                        </a>
+                                        <a
+                                            href="https://github.com/ayomidecole"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                                            aria-label="Ayomide Aremu-Cole on GitHub"
+                                        >
+                                            <Github className="w-4 h-4" />
+                                        </a>
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -125,7 +144,9 @@ function App() {
                                         <SectionPanel
                                             key={section.id}
                                             section={section}
-                                            isOpen={openSectionId === section.id}
+                                            isOpen={
+                                                openSectionId === section.id
+                                            }
                                             onToggle={() =>
                                                 toggleSection(section.id)
                                             }
@@ -135,7 +156,9 @@ function App() {
                                                     {contributors.map(
                                                         (contributor) => (
                                                             <li
-                                                                key={contributor}
+                                                                key={
+                                                                    contributor
+                                                                }
                                                                 className="text-sm text-[var(--text-secondary)]"
                                                             >
                                                                 {contributor}
