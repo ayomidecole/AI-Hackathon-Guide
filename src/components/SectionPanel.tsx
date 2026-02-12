@@ -16,6 +16,12 @@ export function SectionPanel({
     onToggle,
     children,
 }: SectionPanelProps) {
+    const hasContributors = Array.isArray(section.contributors);
+    const itemCount = hasContributors
+        ? section.contributors.length
+        : section.tools.length;
+    const itemLabel = hasContributors ? 'contributor' : 'tool';
+
     return (
         <div
             className={clsx(
@@ -45,8 +51,8 @@ export function SectionPanel({
                         {section.title}
                     </h2>
                     <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                        {section.tools.length} tool
-                        {section.tools.length !== 1 ? 's' : ''}
+                        {itemCount} {itemLabel}
+                        {itemCount !== 1 ? 's' : ''}
                     </p>
                 </div>
                 <span

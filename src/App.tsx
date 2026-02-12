@@ -92,6 +92,9 @@ function App() {
                                 A curated list of tools and resources to help
                                 you build AI applications faster.
                             </p>
+                            <p className="mt-1 text-sm text-[var(--text-secondary)] leading-relaxed">
+                                Created by Ayomide Aremu-Cole
+                            </p>
                             <div
                                 className="mt-6 md:mt-8 pt-4 md:pt-6 border-t"
                                 style={{ borderColor: 'var(--border-subtle)' }}
@@ -120,7 +123,24 @@ function App() {
                                             toggleSection(section.id)
                                         }
                                     >
-                                        <ToolCarousel tools={section.tools} />
+                                        {section.contributors?.length ? (
+                                            <ul className="space-y-2">
+                                                {section.contributors.map(
+                                                    (contributor) => (
+                                                        <li
+                                                            key={contributor}
+                                                            className="text-sm text-[var(--text-secondary)]"
+                                                        >
+                                                            {contributor}
+                                                        </li>
+                                                    ),
+                                                )}
+                                            </ul>
+                                        ) : (
+                                            <ToolCarousel
+                                                tools={section.tools}
+                                            />
+                                        )}
                                     </SectionPanel>
                                 ))}
                             </div>
