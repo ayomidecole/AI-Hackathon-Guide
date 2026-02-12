@@ -26,10 +26,10 @@ export function SectionPanel({ section, isOpen, onToggle, children }: SectionPan
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-4 p-5 md:p-6 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
+        className="w-full flex items-center justify-between gap-4 p-5 md:p-6 max-md:p-4 max-md:gap-3 max-md:touch-manipulation text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
       >
-        <div className="min-w-0">
-          <h2 className="text-lg md:text-xl font-semibold tracking-tight text-[var(--text-primary)] truncate">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-lg md:text-xl font-semibold tracking-tight text-[var(--text-primary)] truncate max-md:text-base">
             {section.title}
           </h2>
           <p className="text-xs text-[var(--text-muted)] mt-0.5">
@@ -59,7 +59,7 @@ export function SectionPanel({ section, isOpen, onToggle, children }: SectionPan
         )}
       >
         <div
-          className="p-5 md:p-6 pt-0 border-t"
+          className="p-5 md:p-6 pt-0 border-t max-md:p-4 max-md:pt-0"
           style={{ borderColor: 'var(--border-subtle)' }}
         >
           {children}

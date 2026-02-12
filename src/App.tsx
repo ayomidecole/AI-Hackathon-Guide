@@ -35,14 +35,14 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex max-md:flex-col bg-[var(--bg-base)] text-[var(--text-primary)] font-sans antialiased">
+    <div className="min-h-screen flex max-md:flex-col bg-[var(--bg-base)] text-[var(--text-primary)] font-sans antialiased max-md:overflow-x-hidden">
       {/* Ambient glow — single smooth gradient, theme-aware */}
       <div className="glow-bg fixed inset-0 pointer-events-none" aria-hidden />
 
       {/* Left panel — frosted intro (sidebar on md+, stacked on small) */}
-      <aside className="fixed left-0 top-0 bottom-0 w-[min(320px,26vw)] shrink-0 flex flex-col p-4 md:p-8 z-10 max-md:relative max-md:w-full max-md:bottom-auto max-md:p-4">
+      <aside className="fixed left-0 top-0 bottom-0 w-[min(320px,26vw)] shrink-0 flex flex-col p-4 md:p-8 z-10 max-md:relative max-md:w-full max-md:bottom-auto max-md:p-3">
         <div
-          className="rounded-3xl backdrop-blur-xl flex-1 flex flex-col p-5 md:p-8 shadow-2xl max-md:flex-initial max-md:min-h-0 border transition-colors"
+          className="rounded-3xl backdrop-blur-xl flex-1 flex flex-col p-5 md:p-8 shadow-2xl max-md:flex-initial max-md:min-h-0 max-md:py-4 max-md:px-4 max-md:rounded-2xl border transition-colors"
           style={{
             backgroundColor: 'var(--bg-panel)',
             borderColor: 'var(--border-subtle)',
@@ -82,7 +82,7 @@ function App() {
               {sections.length} categories · Built for builders
             </p>
           </div>
-          <div className="mt-auto pt-6 md:pt-8 max-md:mt-4">
+          <div className="mt-auto pt-6 md:pt-8 max-md:mt-3 max-md:pt-4">
             <a
               href="#sections"
               className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium text-[var(--text-primary)] transition-colors border hover:opacity-90"
@@ -98,12 +98,12 @@ function App() {
       </aside>
 
       {/* Main content */}
-      <main id="sections" className="flex-1 min-w-0 md:pl-[min(320px,26vw)] relative z-0">
-        <div className="w-full py-10 md:py-14 px-6 md:px-10">
-          <div className="text-right text-xs text-[var(--text-muted)] mb-2">
+      <main id="sections" className="flex-1 min-w-0 md:pl-[min(320px,26vw)] relative z-0 max-md:overflow-x-hidden">
+        <div className="w-full py-10 md:py-14 px-6 md:px-10 max-md:py-5 max-md:px-4">
+          <div className="text-right text-xs text-[var(--text-muted)] mb-2 max-md:mb-1.5">
             Work highlights
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 max-md:space-y-3">
             {sections.map((section) => (
               <SectionPanel
                 key={section.id}

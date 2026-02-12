@@ -20,18 +20,18 @@ export function ToolCard({ tool }: ToolCardProps) {
         borderColor: 'var(--border-subtle)',
       }}
     >
-      <div className="p-5 flex flex-col">
-        <div className="flex items-start gap-4">
+      <div className="p-5 max-md:p-4 flex flex-col">
+        <div className="flex items-start gap-4 max-md:gap-3">
           {tool.imageUrl ? (
             <img
               src={tool.imageUrl}
               alt=""
-              className="w-12 h-12 rounded-xl object-cover shrink-0"
+              className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-xl max-md:rounded-lg object-cover shrink-0"
               style={{ backgroundColor: 'var(--bg-card-hover)' }}
             />
           ) : (
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center font-semibold text-lg shrink-0 border"
+              className="w-12 h-12 max-md:w-10 max-md:h-10 rounded-xl max-md:rounded-lg flex items-center justify-center font-semibold text-lg max-md:text-base shrink-0 border"
               style={{
                 backgroundColor: 'var(--accent-soft)',
                 borderColor: 'var(--accent-muted)',
@@ -42,16 +42,16 @@ export function ToolCard({ tool }: ToolCardProps) {
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-[var(--text-primary)] leading-tight">
+            <h3 className="font-semibold text-[var(--text-primary)] leading-tight max-md:text-sm">
               {tool.name}
             </h3>
-            <p className="text-sm text-[var(--text-muted)] mt-0.5">{tool.tagline}</p>
+            <p className="text-sm text-[var(--text-muted)] mt-0.5 max-md:text-xs max-md:truncate">{tool.tagline}</p>
           </div>
         </div>
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="mt-4 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-90"
+          className="mt-4 max-md:mt-3 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-90 max-md:text-xs max-md:touch-manipulation"
           style={{ color: 'var(--accent)' }}
         >
           <span>{isExpanded ? 'Less details' : 'More details'}</span>
@@ -67,7 +67,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         style={{ borderColor: 'var(--border-subtle)' }}
       >
         <div
-          className="p-5 pt-4 space-y-4"
+          className="p-5 pt-4 space-y-4 max-md:p-4 max-md:pt-3 max-md:space-y-3"
           style={{ backgroundColor: 'var(--bg-card-hover)' }}
         >
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
