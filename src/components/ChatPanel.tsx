@@ -221,27 +221,27 @@ export function ChatPanel({
                 </div>
 
                 <div
-                    className="p-5 pt-4 border-t shrink-0 chat-panel-footer"
+                    className="px-5 py-4 border-t shrink-0 chat-panel-footer"
                     style={{
                         borderColor: 'var(--border-subtle)',
                     }}
                 >
-                    <div className="flex gap-3 items-end">
+                    <div className="flex gap-3 items-center">
                         <textarea
                             ref={inputRef}
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="Type your message…"
-                            rows={2}
+                            rows={1}
                             disabled={loading}
-                            className="flex-1 rounded-2xl px-5 py-3.5 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-input"
+                            className="flex-1 min-h-[44px] max-h-32 rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-input"
                         />
                         <button
                             type="button"
                             onClick={sendMessage}
                             disabled={loading || !input.trim()}
-                            className="shrink-0 rounded-full w-12 h-12 flex items-center justify-center transition-colors disabled:opacity-50 disabled:pointer-events-none theme-hover-opacity chat-panel-send"
+                            className="shrink-0 rounded-full w-10 h-10 flex items-center justify-center transition-colors disabled:opacity-50 disabled:pointer-events-none theme-hover-opacity chat-panel-send"
                             style={{
                                 backgroundColor: 'var(--accent-soft)',
                                 borderColor: 'var(--accent-muted)',
@@ -252,9 +252,9 @@ export function ChatPanel({
                             aria-label="Send message"
                         >
                             {loading ? (
-                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
-                                <Send className="w-5 h-5" />
+                                <Send className="w-4 h-4" />
                             )}
                         </button>
                     </div>

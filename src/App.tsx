@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { SectionPanel } from './components/SectionPanel';
 import { ToolCarousel } from './components/ToolCarousel';
 import { ChatPanel } from './components/ChatPanel';
-import { ChatToggle } from './components/ChatToggle';
 import { sections } from './content/sections';
 import { Sun, Moon, Linkedin, Github } from 'lucide-react';
 
@@ -71,40 +70,27 @@ function App() {
                                 <span className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-widest">
                                     Guide
                                 </span>
-                                <div className="flex items-center gap-2">
-                                    <ChatToggle
-                                        onClick={() => {
-                                            setChatOptions({});
-                                            setChatOpen(true);
-                                        }}
-                                        ariaLabel={
-                                            chatOpen
-                                                ? 'AI chat is open'
-                                                : 'Open AI chat'
-                                        }
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={toggleTheme}
-                                        className="rounded-full p-2 border transition-colors hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
-                                        style={{
-                                            backgroundColor: 'var(--bg-card)',
-                                            borderColor: 'var(--border-subtle)',
-                                            color: 'var(--text-secondary)',
-                                        }}
-                                        aria-label={
-                                            theme === 'dark'
-                                                ? 'Switch to light mode'
-                                                : 'Switch to dark mode'
-                                        }
-                                    >
+                                <button
+                                    type="button"
+                                    onClick={toggleTheme}
+                                    className="rounded-full p-2 border transition-colors hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
+                                    style={{
+                                        backgroundColor: 'var(--bg-card)',
+                                        borderColor: 'var(--border-subtle)',
+                                        color: 'var(--text-secondary)',
+                                    }}
+                                    aria-label={
+                                        theme === 'dark'
+                                            ? 'Switch to light mode'
+                                            : 'Switch to dark mode'
+                                    }
+                                >
                                     {theme === 'dark' ? (
                                         <Sun className="w-4 h-4" />
                                     ) : (
                                         <Moon className="w-4 h-4" />
                                     )}
-                                    </button>
-                                </div>
+                                </button>
                             </div>
                             <h1 className="font-display text-xl md:text-3xl font-bold tracking-tight text-[var(--text-primary)] leading-tight min-w-0 break-words">
                                 AI Hackathon Guide
@@ -123,7 +109,7 @@ function App() {
                                     });
                                     setChatOpen(true);
                                 }}
-                                className="mt-4 w-full rounded-xl py-2.5 px-4 text-sm font-medium border transition-colors theme-hover-opacity theme-accent-interaction"
+                                className="mt-4 w-full rounded-xl py-2.5 px-4 text-sm font-medium border transition-all duration-200 ease-out suggest-stack-btn"
                                 style={{
                                     backgroundColor: 'var(--accent-soft)',
                                     borderColor: 'var(--accent-muted)',
