@@ -108,18 +108,16 @@ export function ChatPanel({
             aria-label="AI chat"
         >
             <div
-                className="flex flex-col w-full max-w-lg max-h-[85vh] rounded-2xl border overflow-hidden shadow-2xl"
+                className="flex flex-col w-full max-w-lg max-h-[85vh] rounded-2xl border overflow-hidden shadow-2xl chat-panel-modal"
                 style={{
-                    backgroundColor: 'var(--bg-panel)',
                     borderColor: 'var(--border-muted)',
                     boxShadow: 'var(--shadow-panel)',
                 }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div
-                    className="flex items-center justify-between px-4 py-3 border-b shrink-0"
+                    className="flex items-center justify-between px-4 py-3 border-b shrink-0 chat-panel-header"
                     style={{
-                        backgroundColor: 'var(--bg-card)',
                         borderColor: 'var(--border-subtle)',
                     }}
                 >
@@ -141,11 +139,10 @@ export function ChatPanel({
                 </div>
 
                 <div
-                    className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px]"
-                    style={{ backgroundColor: 'var(--bg-panel)' }}
+                    className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px] chat-panel-content"
                 >
                     {messages.length === 0 && (
-                        <p className="text-sm text-[var(--text-muted)]">
+                        <p className="text-sm chat-panel-intro">
                             Ask about tools, compare options, or get hackathon
                             tips. Try: &quot;Compare Cursor and Replit&quot; or
                             &quot;Suggest a stack for a todo app&quot;
@@ -155,16 +152,12 @@ export function ChatPanel({
                         <div
                             key={i}
                             className={clsx(
-                                'rounded-xl px-4 py-3 text-sm',
+                                'rounded-xl px-4 py-3 text-sm chat-panel-message',
                                 m.role === 'user'
-                                    ? 'ml-8'
-                                    : 'mr-8'
+                                    ? 'ml-8 chat-panel-message-user'
+                                    : 'mr-8 chat-panel-message-assistant'
                             )}
                             style={{
-                                backgroundColor:
-                                    m.role === 'user'
-                                        ? 'var(--accent-soft)'
-                                        : 'var(--bg-card)',
                                 borderColor: 'var(--border-subtle)',
                                 color: 'var(--text-primary)',
                                 ...(m.role === 'assistant' && {
@@ -173,7 +166,7 @@ export function ChatPanel({
                                 }),
                             }}
                         >
-                            <span className="font-medium text-[var(--text-muted)] text-xs block mb-1">
+                            <span className="font-medium chat-panel-message-label text-xs block mb-1">
                                 {m.role === 'user' ? 'You' : 'Assistant'}
                             </span>
                             <div className="whitespace-pre-wrap break-words">
@@ -183,9 +176,8 @@ export function ChatPanel({
                     ))}
                     {loading && (
                         <div
-                            className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm"
+                            className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm chat-panel-message chat-panel-message-assistant"
                             style={{
-                                backgroundColor: 'var(--bg-card)',
                                 borderColor: 'var(--border-subtle)',
                                 borderWidth: 1,
                                 borderStyle: 'solid',
@@ -211,9 +203,8 @@ export function ChatPanel({
                 </div>
 
                 <div
-                    className="p-4 border-t shrink-0"
+                    className="p-4 border-t shrink-0 chat-panel-footer"
                     style={{
-                        backgroundColor: 'var(--bg-card)',
                         borderColor: 'var(--border-subtle)',
                     }}
                 >
@@ -226,14 +217,7 @@ export function ChatPanel({
                             placeholder="Type your message…"
                             rows={2}
                             disabled={loading}
-                            className="flex-1 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                            style={{
-                                backgroundColor: 'var(--bg-panel)',
-                                borderColor: 'var(--border-subtle)',
-                                borderWidth: 1,
-                                borderStyle: 'solid',
-                                color: 'var(--text-primary)',
-                            }}
+                            className="flex-1 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-input"
                         />
                         <button
                             type="button"

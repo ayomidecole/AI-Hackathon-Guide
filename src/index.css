@@ -200,6 +200,67 @@ body,
         both;
 }
 
+/* Chat panel modal — solid backgrounds for better contrast in dark mode */
+.chat-panel-modal {
+  background-color: #1e1e24;
+}
+
+.chat-panel-header,
+.chat-panel-footer {
+  background-color: #25252e;
+}
+
+.chat-panel-content {
+  background-color: #1e1e24;
+}
+
+.chat-panel-intro {
+  color: var(--text-secondary);
+}
+
+.chat-panel-input {
+  background-color: #25252e;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.chat-panel-input::placeholder {
+  color: var(--text-muted);
+}
+
+.chat-panel-message-user {
+  background-color: var(--accent-soft);
+}
+
+.chat-panel-message-assistant {
+  background-color: #25252e;
+}
+
+.chat-panel-message-label {
+  color: var(--text-secondary);
+}
+
+[data-theme='light'] .chat-panel-modal {
+  background-color: var(--bg-panel);
+}
+
+[data-theme='light'] .chat-panel-header,
+[data-theme='light'] .chat-panel-footer {
+  background-color: var(--bg-card);
+}
+
+[data-theme='light'] .chat-panel-content {
+  background-color: var(--bg-panel);
+}
+
+[data-theme='light'] .chat-panel-input {
+  background-color: var(--bg-panel);
+}
+
+[data-theme='light'] .chat-panel-message-assistant {
+  background-color: var(--bg-card);
+}
+
 @media (prefers-reduced-motion: reduce) {
     .tool-card-slide-out-left,
     .tool-card-slide-out-right,

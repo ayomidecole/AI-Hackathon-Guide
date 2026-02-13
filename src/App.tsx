@@ -198,17 +198,6 @@ function App() {
                                                         openSectionId ===
                                                         section.id
                                                     }
-                                                    onAskAI={(tool) => {
-                                                        setChatOptions({
-                                                            toolContext: {
-                                                                toolId: tool.id,
-                                                                toolName: tool.name,
-                                                                toolDescription:
-                                                                    tool.description,
-                                                            },
-                                                        });
-                                                        setChatOpen(true);
-                                                    }}
                                                 />
                                             )}
                                         </SectionPanel>
