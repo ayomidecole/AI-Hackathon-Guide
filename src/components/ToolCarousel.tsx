@@ -56,11 +56,6 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
     return () => window.clearTimeout(timer);
   }, [animationStage]);
 
-  // Collapse details when changing to another tool
-  useEffect(() => {
-    setCardExpanded(false);
-  }, [activeIndex]);
-
   // Auto-focus when section opens so arrow keys work without an extra click
   useEffect(() => {
     const justOpened = isSectionOpen && !prevSectionOpenRef.current;

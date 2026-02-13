@@ -10,9 +10,14 @@ interface ToolCardProps {
     onExpandToggle?: (expanded: boolean) => void;
 }
 
-export function ToolCard({ tool, expanded: controlledExpanded, onExpandToggle }: ToolCardProps) {
+export function ToolCard({
+    tool,
+    expanded: controlledExpanded,
+    onExpandToggle,
+}: ToolCardProps) {
     const [internalExpanded, setInternalExpanded] = useState(false);
-    const isControlled = controlledExpanded !== undefined && onExpandToggle !== undefined;
+    const isControlled =
+        controlledExpanded !== undefined && onExpandToggle !== undefined;
     const isExpanded = isControlled ? controlledExpanded : internalExpanded;
     const setIsExpanded = isControlled
         ? (next: boolean) => onExpandToggle(next)
@@ -77,43 +82,63 @@ export function ToolCard({ tool, expanded: controlledExpanded, onExpandToggle }:
                 className={clsx(
                     'border-t overflow-hidden transition-all duration-300 ease-out',
                     isExpanded
-                        ? 'max-h-[420px] opacity-100'
+                        ? tool.detailsSections?.length
+                            ? 'max-h-[80vh] opacity-100'
+                            : 'max-h-[420px] opacity-100'
                         : 'max-h-0 opacity-0',
                 )}
                 style={{ borderColor: 'var(--border-subtle)' }}
             >
                 <div
-                    className="p-5 pt-4 space-y-4 max-md:p-4 max-md:pt-3 max-md:space-y-3"
+                    className="p-5 pt-4 space-y-4 max-md:p-4 max-md:pt-3 overflow-y-auto max-h-[78vh]"
                     style={{ backgroundColor: 'var(--bg-card-hover)' }}
                 >
-                    <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                        {tool.description}
-                    </p>
-
-                    {tool.bullets.length > 0 && (
-                        <ul className="space-y-2">
-                            {tool.bullets.map((bullet, idx) => (
-                                <li
-                                    key={idx}
-                                    className="text-sm text-[var(--text-secondary)] flex items-start gap-2"
-                                >
-                                    <span
-                                        className="mt-0.5 shrink-0"
-                                        style={{ color: 'var(--accent)' }}
-                                    >
-                                        •
-                                    </span>
-                                    <span>{bullet}</span>
-                                </li>
-                            ))}
-                        </ul>
+                    {tool.detailsGuide && (
+                        <a
+                            href={tool.detailsGuide.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors border hover:opacity-90 w-fit"
+                            style={{
+                                backgroundColor: 'var(--accent-soft)',
+                                borderColor: 'var(--accent-muted)',
+                                color: 'var(--accent)',
+                            }}
+                        >
+                            Read: {tool.detailsGuide.label}
+                            <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
                     )}
+
+                    {tool.detailsSections?.map((section, idx) => (
+                        <div key={idx} className="space-y-2">
+                            <h4 className="text-sm font-semibold text-[var(--text-primary)]">
+                                {section.heading}
+                            </h4>
+                            <ul className="space-y-1.5">
+                                {section.items.map((item, i) => (
+                                    <li
+                                        key={i}
+                                        className="text-sm text-[var(--text-secondary)] flex items-start gap-2 leading-snug"
+                                    >
+                                        <span
+                                            className="mt-1 shrink-0"
+                                            style={{ color: 'var(--accent)' }}
+                                        >
+                                            •
+                                        </span>
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
 
                     <a
                         href={tool.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors border hover:opacity-90"
+                        className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors border hover:opacity-90 w-fit"
                         style={{
                             backgroundColor: 'var(--bg-card)',
                             borderColor: 'var(--border-muted)',
