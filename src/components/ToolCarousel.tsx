@@ -12,10 +12,14 @@ interface ToolCarouselProps {
 
 const EXIT_DURATION_MS = 180;
 const ENTER_DURATION_MS = 240;
+const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
 
 export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
-  const [cardExpanded, setCardExpanded] = useState(true);
+  const [cardExpanded, setCardExpanded] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return !window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+  });
   const containerRef = useRef<HTMLDivElement>(null);
   const prevSectionOpenRef = useRef(false);
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
