@@ -36,9 +36,9 @@
 [data-theme='light'] {
     --bg-base: #ebe0d4;
     --bg-panel: #e2d6c8;
-    --bg-panel-hover: #ddd0c0;
+    --bg-panel-hover: #e0d4c6;
     --bg-card: #dfd2c2;
-    --bg-card-hover: #d8c9b6;
+    --bg-card-hover: #ddcfbf;
     --border-subtle: rgba(70, 55, 45, 0.12);
     --border-muted: rgba(70, 55, 45, 0.2);
     --text-primary: #1c1917;
