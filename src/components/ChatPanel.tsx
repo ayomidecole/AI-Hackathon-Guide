@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Loader2 } from 'lucide-react';
+import { X, Send, Loader2, Bot } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export interface Message {
@@ -108,7 +108,7 @@ export function ChatPanel({
             aria-label="AI chat"
         >
             <div
-                className="flex flex-col w-full max-w-lg max-h-[85vh] rounded-2xl border overflow-hidden shadow-2xl chat-panel-modal"
+                className="flex flex-col w-full max-w-lg max-h-[85vh] rounded-3xl border overflow-hidden shadow-2xl chat-panel-modal"
                 style={{
                     borderColor: 'var(--border-muted)',
                     boxShadow: 'var(--shadow-panel)',
@@ -116,20 +116,33 @@ export function ChatPanel({
                 onClick={(e) => e.stopPropagation()}
             >
                 <div
-                    className="flex items-center justify-between px-4 py-3 border-b shrink-0 chat-panel-header"
+                    className="flex items-center justify-between gap-3 px-5 py-4 border-b shrink-0 chat-panel-header"
                     style={{
                         borderColor: 'var(--border-subtle)',
                     }}
                 >
-                    <h3 className="font-display font-semibold text-[var(--text-primary)]">
-                        AI Assistant
-                    </h3>
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div
+                            className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center chat-panel-avatar"
+                            style={{
+                                backgroundColor: 'var(--accent-soft)',
+                                borderColor: 'var(--accent-muted)',
+                                borderWidth: 1,
+                                borderStyle: 'solid',
+                                color: 'var(--accent)',
+                            }}
+                        >
+                            <Bot className="w-5 h-5" strokeWidth={2} />
+                        </div>
+                        <h3 className="font-display font-semibold text-[var(--text-primary)] truncate">
+                            AI Assistant
+                        </h3>
+                    </div>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="rounded-full p-2 transition-colors hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                        className="shrink-0 rounded-full p-2.5 transition-colors hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-close"
                         style={{
-                            backgroundColor: 'var(--bg-card-hover)',
                             color: 'var(--text-secondary)',
                         }}
                         aria-label="Close chat"
@@ -139,23 +152,28 @@ export function ChatPanel({
                 </div>
 
                 <div
-                    className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px] chat-panel-content"
+                    className="flex-1 overflow-y-auto p-5 space-y-4 min-h-[200px] chat-panel-content"
                 >
                     {messages.length === 0 && (
-                        <p className="text-sm chat-panel-intro">
-                            Ask about tools, compare options, or get hackathon
-                            tips. Try: &quot;Compare Cursor and Replit&quot; or
-                            &quot;Suggest a stack for a todo app&quot;
-                        </p>
+                        <div className="rounded-2xl px-5 py-4 chat-panel-welcome">
+                            <p className="text-sm chat-panel-intro leading-relaxed">
+                                Ask about tools, compare options, or get
+                                hackathon tips.
+                            </p>
+                            <p className="text-sm chat-panel-intro mt-2 opacity-90">
+                                Try: &quot;Compare Cursor and Replit&quot; or
+                                &quot;Suggest a stack for a todo app&quot;
+                            </p>
+                        </div>
                     )}
                     {messages.map((m, i) => (
                         <div
                             key={i}
                             className={clsx(
-                                'rounded-xl px-4 py-3 text-sm chat-panel-message',
+                                'rounded-2xl px-4 py-3 text-sm chat-panel-message',
                                 m.role === 'user'
-                                    ? 'ml-8 chat-panel-message-user'
-                                    : 'mr-8 chat-panel-message-assistant'
+                                    ? 'ml-10 rounded-br-md chat-panel-message-user'
+                                    : 'mr-10 rounded-bl-md chat-panel-message-assistant'
                             )}
                             style={{
                                 borderColor: 'var(--border-subtle)',
@@ -176,7 +194,7 @@ export function ChatPanel({
                     ))}
                     {loading && (
                         <div
-                            className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm chat-panel-message chat-panel-message-assistant"
+                            className="flex items-center gap-2 rounded-2xl rounded-bl-md mr-10 px-4 py-3 text-sm chat-panel-message chat-panel-message-assistant"
                             style={{
                                 borderColor: 'var(--border-subtle)',
                                 borderWidth: 1,
@@ -203,12 +221,12 @@ export function ChatPanel({
                 </div>
 
                 <div
-                    className="p-4 border-t shrink-0 chat-panel-footer"
+                    className="p-5 pt-4 border-t shrink-0 chat-panel-footer"
                     style={{
                         borderColor: 'var(--border-subtle)',
                     }}
                 >
-                    <div className="flex gap-2">
+                    <div className="flex gap-3 items-end">
                         <textarea
                             ref={inputRef}
                             value={input}
@@ -217,13 +235,13 @@ export function ChatPanel({
                             placeholder="Type your message…"
                             rows={2}
                             disabled={loading}
-                            className="flex-1 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-input"
+                            className="flex-1 rounded-2xl px-5 py-3.5 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-input"
                         />
                         <button
                             type="button"
                             onClick={sendMessage}
                             disabled={loading || !input.trim()}
-                            className="shrink-0 rounded-xl p-3 transition-colors disabled:opacity-50 disabled:pointer-events-none theme-hover-opacity"
+                            className="shrink-0 rounded-full w-12 h-12 flex items-center justify-center transition-colors disabled:opacity-50 disabled:pointer-events-none theme-hover-opacity chat-panel-send"
                             style={{
                                 backgroundColor: 'var(--accent-soft)',
                                 borderColor: 'var(--accent-muted)',
