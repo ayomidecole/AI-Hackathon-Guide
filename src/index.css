@@ -29,6 +29,7 @@
     --shadow-panel: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     --dot-active: #d97706;
     --dot-inactive: rgba(255, 255, 255, 0.35);
+    --tool-card-slide-opacity: 0.2;
     color-scheme: dark;
 }
 
@@ -53,6 +54,7 @@
     --shadow-panel: 0 25px 50px -12px rgba(50, 40, 30, 0.15);
     --dot-active: #b45309;
     --dot-inactive: rgba(60, 50, 40, 0.35);
+    --tool-card-slide-opacity: 1;
     --glass-blur: 20px;
     --glass-edge: rgba(60, 50, 40, 0.06);
     color-scheme: light;
@@ -102,7 +104,7 @@ body,
     }
     to {
         transform: translate3d(-24%, 0, 0);
-        opacity: 0.2;
+        opacity: var(--tool-card-slide-opacity);
     }
 }
 
@@ -113,14 +115,14 @@ body,
     }
     to {
         transform: translate3d(24%, 0, 0);
-        opacity: 0.2;
+        opacity: var(--tool-card-slide-opacity);
     }
 }
 
 @keyframes tool-card-slide-in-right {
     from {
         transform: translate3d(24%, 0, 0);
-        opacity: 0.2;
+        opacity: var(--tool-card-slide-opacity);
     }
     to {
         transform: translateX(0);
@@ -131,7 +133,7 @@ body,
 @keyframes tool-card-slide-in-left {
     from {
         transform: translate3d(-24%, 0, 0);
-        opacity: 0.2;
+        opacity: var(--tool-card-slide-opacity);
     }
     to {
         transform: translateX(0);
