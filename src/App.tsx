@@ -151,22 +151,7 @@ function App() {
                                                 toggleSection(section.id)
                                             }
                                         >
-                                            {showContributors ? (
-                                                <ul className="space-y-2">
-                                                    {contributors.map(
-                                                        (contributor) => (
-                                                            <li
-                                                                key={
-                                                                    contributor
-                                                                }
-                                                                className="text-sm text-[var(--text-secondary)]"
-                                                            >
-                                                                {contributor}
-                                                            </li>
-                                                        ),
-                                                    )}
-                                                </ul>
-                                            ) : (
+                                            {showContributors ? null : (
                                                 <ToolCarousel
                                                     tools={section.tools}
                                                     isSectionOpen={
