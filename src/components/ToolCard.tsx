@@ -15,7 +15,7 @@ export function ToolCard({
     expanded: controlledExpanded,
     onExpandToggle,
 }: ToolCardProps) {
-    const [internalExpanded, setInternalExpanded] = useState(false);
+    const [internalExpanded, setInternalExpanded] = useState(true);
     const isControlled =
         controlledExpanded !== undefined && onExpandToggle !== undefined;
     const isExpanded = isControlled ? controlledExpanded : internalExpanded;
