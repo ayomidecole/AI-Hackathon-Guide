@@ -66,7 +66,7 @@ export function ToolCard({
 
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="mt-4 max-md:mt-3 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors theme-hover-opacity max-md:text-xs max-md:touch-manipulation"
+                    className="mt-4 max-md:mt-3 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors theme-hover-opacity theme-accent-interaction max-md:text-xs max-md:touch-manipulation"
                     style={{ color: 'var(--accent)' }}
                 >
                     <span>{isExpanded ? 'Less details' : 'More details'}</span>
@@ -101,7 +101,7 @@ export function ToolCard({
                             href={tool.detailsGuide.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors border theme-hover-opacity w-fit"
+                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors border theme-hover-opacity theme-accent-interaction w-fit"
                             style={{
                                 backgroundColor: 'var(--accent-soft)',
                                 borderColor: 'var(--accent-muted)',

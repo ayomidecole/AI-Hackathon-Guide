@@ -79,15 +79,13 @@ export function SectionPanel({
             style={{
                 backgroundColor: hideHeader
                     ? 'var(--bg-card)'
-                    : isOpen
+                    : isHovered || isOpen
                       ? 'var(--bg-card-hover)'
                       : 'var(--bg-card)',
                 borderColor: hideHeader
                     ? 'var(--border-subtle)'
-                    : isHovered
-                      ? 'var(--border-muted)'
-                      : isOpen
-                        ? 'var(--border-muted)'
+                    : isHovered || isOpen
+                      ? 'var(--accent-muted)'
                         : 'var(--border-subtle)',
                 boxShadow,
                 transform: isHovered
@@ -103,7 +101,13 @@ export function SectionPanel({
             {!hideHeader && (
                 <button
                     onClick={onToggle}
-                    className="w-full flex items-center justify-between gap-4 p-5 md:p-6 max-md:p-4 max-md:gap-3 max-md:touch-manipulation text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
+                    className="w-full flex items-center justify-between gap-4 p-5 md:p-6 max-md:p-4 max-md:gap-3 max-md:touch-manipulation text-left transition-colors theme-accent-interaction focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
+                    style={{
+                        backgroundColor:
+                            isHovered || isOpen
+                                ? 'var(--accent-soft)'
+                                : 'transparent',
+                    }}
                 >
                     <div className="min-w-0 flex-1">
                         <h2 className="font-display text-lg md:text-xl font-semibold tracking-tight text-[var(--text-primary)] truncate max-md:text-base flex items-center gap-2">

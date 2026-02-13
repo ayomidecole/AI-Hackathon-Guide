@@ -48,8 +48,8 @@
     --text-secondary: #57534e;
     --text-muted: #78716c;
     --accent: #b45309;
-    --accent-muted: rgba(180, 83, 9, 0.22);
-    --accent-soft: rgba(180, 83, 9, 0.14);
+    --accent-muted: rgba(180, 83, 9, 0.3);
+    --accent-soft: rgba(180, 83, 9, 0.22);
     --glow-primary: rgba(217, 119, 6, 0.1);
     --glow-secondary: rgba(180, 83, 9, 0.05);
     --glow-center: rgba(217, 119, 6, 0.04);
@@ -108,6 +108,21 @@ body,
 
 .theme-hover-opacity:hover {
     opacity: var(--interactive-hover-opacity);
+}
+
+/* Keep tool interactions warm/orange in light mode (avoid white flash). */
+.theme-accent-interaction {
+    -webkit-tap-highlight-color: transparent;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.theme-accent-interaction:hover,
+.theme-accent-interaction:focus-visible,
+.theme-accent-interaction:active {
+    background-color: var(--accent-soft);
+    border-color: var(--accent-muted);
 }
 
 @keyframes tool-card-slide-out-left {
