@@ -40,11 +40,40 @@ export function SectionPanel({
                 ? HOVER_GLOW
                 : undefined;
 
+    const handlePointerEnter = (
+        event: React.PointerEvent<HTMLDivElement>,
+    ) => {
+        if (event.pointerType === 'mouse') {
+            setIsHovered(true);
+        }
+    };
+
+    const handlePointerLeave = (
+        event: React.PointerEvent<HTMLDivElement>,
+    ) => {
+        if (event.pointerType === 'mouse') {
+            setIsHovered(false);
+        }
+    };
+
+    const handlePointerDown = (
+        event: React.PointerEvent<HTMLDivElement>,
+    ) => {
+        if (event.pointerType !== 'mouse') {
+            setIsHovered(true);
+        }
+    };
+
+    const clearTouchHover = (event: React.PointerEvent<HTMLDivElement>) => {
+        if (event.pointerType !== 'mouse') {
+            setIsHovered(false);
+        }
+    };
+
     return (
         <div
             className={clsx(
                 'border transition-all duration-[350ms] overflow-hidden ease-out',
-                'hover:-translate-y-1 hover:scale-[1.008]',
                 !hideHeader && isOpen && 'shadow-lg',
             )}
             style={{
@@ -61,9 +90,15 @@ export function SectionPanel({
                         ? 'var(--border-muted)'
                         : 'var(--border-subtle)',
                 boxShadow,
+                transform: isHovered
+                    ? 'translate3d(0, -0.25rem, 0) scale(1.008)'
+                    : undefined,
             }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+            onPointerDown={handlePointerDown}
+            onPointerUp={clearTouchHover}
+            onPointerCancel={clearTouchHover}
         >
             {!hideHeader && (
                 <button
