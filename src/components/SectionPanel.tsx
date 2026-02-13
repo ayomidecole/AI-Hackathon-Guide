@@ -147,11 +147,17 @@ export function SectionPanel({
                 className={clsx(
                     'overflow-hidden transition-all duration-300 ease-out',
                     hideHeader
-                        ? 'max-h-[2000px] opacity-100'
+                        ? 'max-h-[2000px]'
                         : isOpen
-                          ? 'max-h-[2000px] opacity-100'
-                          : 'max-h-0 opacity-0',
+                          ? 'max-h-[2000px]'
+                          : 'max-h-0',
                 )}
+                style={{
+                    opacity:
+                        hideHeader || isOpen
+                            ? 1
+                            : 'var(--content-collapse-opacity)',
+                }}
             >
                 <div
                     className="p-5 md:p-6 pt-0 border-t max-md:p-4 max-md:pt-0 max-md:pt-4"
