@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SectionPanel } from './components/SectionPanel';
 import { ToolCarousel } from './components/ToolCarousel';
+import { ChatPanel } from './components/ChatPanel';
 import { sections } from './content/sections';
 import { Sun, Moon, Linkedin, Github } from 'lucide-react';
 
@@ -21,6 +22,12 @@ function App() {
         'dev-tools',
     );
     const [theme, setTheme] = useState<Theme>(getInitialTheme);
+    const [chatOpen, setChatOpen] = useState(false);
+    const [chatOptions, setChatOptions] = useState<{
+        initialInput?: string;
+        mode?: 'suggest-stack';
+        toolContext?: { toolId: string; toolName: string; toolDescription: string };
+    }>({});
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -92,6 +99,25 @@ function App() {
                                 A curated list of tools and resources to help
                                 you build AI applications faster.
                             </p>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setChatOptions({
+                                        initialInput:
+                                            "I'm building — suggest a stack",
+                                        mode: 'suggest-stack',
+                                    });
+                                    setChatOpen(true);
+                                }}
+                                className="mt-4 w-full rounded-xl py-2.5 px-4 text-sm font-medium border transition-all duration-200 ease-out suggest-stack-btn"
+                                style={{
+                                    backgroundColor: 'var(--accent-soft)',
+                                    borderColor: 'var(--accent-muted)',
+                                    color: 'var(--accent)',
+                                }}
+                            >
+                                Suggest a stack
+                            </button>
                             <div
                                 className="mt-4 md:mt-5 pt-4 md:pt-5 border-t max-md:hidden"
                                 style={{ borderColor: 'var(--border-subtle)' }}
@@ -200,6 +226,13 @@ function App() {
                     </main>
                 </div>
             </div>
+            <ChatPanel
+                isOpen={chatOpen}
+                onClose={() => setChatOpen(false)}
+                initialInput={chatOptions.initialInput}
+                mode={chatOptions.mode}
+                toolContext={chatOptions.toolContext}
+            />
         </div>
     );
 }

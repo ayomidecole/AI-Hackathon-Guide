@@ -200,6 +200,111 @@ body,
         both;
 }
 
+/* Suggest a stack button — bounce + 2% glow on hover and touch */
+.suggest-stack-btn {
+  -webkit-tap-highlight-color: transparent;
+  transform: translateY(0) scale(1);
+  box-shadow: none;
+}
+
+.suggest-stack-btn:hover,
+.suggest-stack-btn:active {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 0 24px rgba(217, 119, 6, 0.03),
+    0 0 48px rgba(217, 119, 6, 0.03);
+}
+
+[data-theme='light'] .suggest-stack-btn:hover,
+[data-theme='light'] .suggest-stack-btn:active {
+  box-shadow: 0 0 24px rgba(180, 83, 9, 0.03),
+    0 0 48px rgba(180, 83, 9, 0.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suggest-stack-btn:hover,
+  .suggest-stack-btn:active {
+    transform: none;
+  }
+}
+
+/* Chat panel modal — solid backgrounds for better contrast in dark mode */
+.chat-panel-modal {
+  background-color: #1e1e24;
+}
+
+.chat-panel-header,
+.chat-panel-footer {
+  background-color: #25252e;
+}
+
+.chat-panel-content {
+  background-color: #1e1e24;
+}
+
+.chat-panel-intro {
+  color: var(--text-secondary);
+}
+
+.chat-panel-welcome {
+  background-color: #25252e;
+  border: 1px solid var(--border-subtle);
+}
+
+[data-theme='light'] .chat-panel-welcome {
+  background-color: var(--bg-card);
+}
+
+.chat-panel-close:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] .chat-panel-close:hover {
+  background-color: var(--accent-soft);
+}
+
+.chat-panel-input {
+  background-color: #25252e;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.chat-panel-input::placeholder {
+  color: var(--text-muted);
+}
+
+.chat-panel-message-user {
+  background-color: var(--accent-soft);
+}
+
+.chat-panel-message-assistant {
+  background-color: #25252e;
+}
+
+.chat-panel-message-label {
+  color: var(--text-secondary);
+}
+
+[data-theme='light'] .chat-panel-modal {
+  background-color: var(--bg-panel);
+}
+
+[data-theme='light'] .chat-panel-header,
+[data-theme='light'] .chat-panel-footer {
+  background-color: var(--bg-card);
+}
+
+[data-theme='light'] .chat-panel-content {
+  background-color: var(--bg-panel);
+}
+
+[data-theme='light'] .chat-panel-input {
+  background-color: var(--bg-panel);
+}
+
+[data-theme='light'] .chat-panel-message-assistant {
+  background-color: var(--bg-card);
+}
+
 @media (prefers-reduced-motion: reduce) {
     .tool-card-slide-out-left,
     .tool-card-slide-out-right,

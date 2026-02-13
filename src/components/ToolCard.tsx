@@ -66,7 +66,7 @@ export function ToolCard({
 
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="mt-4 max-md:mt-3 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors theme-hover-opacity theme-accent-interaction max-md:text-xs max-md:touch-manipulation"
+                    className="mt-4 max-md:mt-3 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors max-md:text-xs max-md:touch-manipulation"
                     style={{ color: 'var(--accent)' }}
                 >
                     <span>{isExpanded ? 'Less details' : 'More details'}</span>
