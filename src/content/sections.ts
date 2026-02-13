@@ -570,10 +570,4 @@ export const sections: Section[] = [
             },
         ],
     },
-    {
-        id: 'contributors',
-        title: 'Contributors',
-        tools: [],
-        contributors: ['Created by Ayomide Aremu-Cole'],
-    },
 ];
