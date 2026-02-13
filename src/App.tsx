@@ -93,7 +93,7 @@ function App() {
                                 you build AI applications faster.
                             </p>
                             <div
-                                className="mt-4 md:mt-5 pt-4 md:pt-5 border-t"
+                                className="mt-4 md:mt-5 pt-4 md:pt-5 border-t max-md:hidden"
                                 style={{ borderColor: 'var(--border-subtle)' }}
                             >
                                 <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-2">
@@ -163,6 +163,38 @@ function App() {
                                         </SectionPanel>
                                     );
                                 })}
+                            </div>
+                            {/* Contributors at bottom on mobile so a long list doesn't push main content down */}
+                            <div
+                                className="mt-8 pt-5 border-t md:hidden pb-2"
+                                style={{ borderColor: 'var(--border-subtle)' }}
+                            >
+                                <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                    Contributors
+                                </p>
+                                <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-semibold flex items-center gap-2 flex-wrap">
+                                    Created by Ayomide Aremu-Cole
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <a
+                                            href="https://www.linkedin.com/in/ayomidecole98/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                                            aria-label="Ayomide Aremu-Cole on LinkedIn"
+                                        >
+                                            <Linkedin className="w-4 h-4" />
+                                        </a>
+                                        <a
+                                            href="https://github.com/ayomidecole"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                                            aria-label="Ayomide Aremu-Cole on GitHub"
+                                        >
+                                            <Github className="w-4 h-4" />
+                                        </a>
+                                    </span>
+                                </p>
                             </div>
                         </div>
                     </main>
