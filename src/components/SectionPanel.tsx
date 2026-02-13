@@ -85,8 +85,8 @@ export function SectionPanel({
                 borderColor: hideHeader
                     ? 'var(--border-subtle)'
                     : isHovered || isOpen
-                      ? 'var(--accent-muted)'
-                        : 'var(--border-subtle)',
+                      ? 'var(--section-border-hover, var(--accent-muted))'
+                      : 'var(--border-subtle)',
                 boxShadow,
                 transform: isHovered
                     ? 'translate3d(0, -0.25rem, 0) scale(1.008)'
@@ -101,11 +101,11 @@ export function SectionPanel({
             {!hideHeader && (
                 <button
                     onClick={onToggle}
-                    className="w-full flex items-center justify-between gap-4 p-5 md:p-6 max-md:p-4 max-md:gap-3 max-md:touch-manipulation text-left transition-colors theme-accent-interaction focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
+                    className="w-full flex items-center justify-between gap-4 p-5 md:p-6 max-md:p-4 max-md:gap-3 max-md:touch-manipulation text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
                     style={{
                         backgroundColor:
                             isHovered || isOpen
-                                ? 'var(--accent-soft)'
+                                ? 'var(--bg-card-hover)'
                                 : 'transparent',
                     }}
                 >
@@ -159,7 +159,10 @@ export function SectionPanel({
             >
                 <div
                     className="p-5 md:p-6 pt-0 border-t max-md:p-4 max-md:pt-0 max-md:pt-4"
-                    style={{ borderColor: 'var(--border-subtle)' }}
+                    style={{
+                        borderColor: 'var(--border-subtle)',
+                        backgroundColor: 'var(--bg-card-hover)',
+                    }}
                 >
                     {children}
                 </div>

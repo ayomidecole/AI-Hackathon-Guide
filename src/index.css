@@ -7,25 +7,26 @@
     --font-display: 'Turret Road', var(--font-sans);
 }
 
-/* Dark theme — fun, livelier (warm blue‑gray base + stronger glows) */
+/* Dark theme — no brightness lift on hover/open; stays dark */
 :root,
 [data-theme='dark'] {
     --bg-base: #16161e;
     --bg-panel: rgba(255, 255, 255, 0.04);
-    --bg-panel-hover: rgba(255, 255, 255, 0.07);
+    --bg-panel-hover: rgba(255, 255, 255, 0.04);
     --bg-card: rgba(255, 255, 255, 0.03);
-    --bg-card-hover: rgba(255, 255, 255, 0.06);
+    --bg-card-hover: rgba(255, 255, 255, 0.03);
     --border-subtle: rgba(255, 255, 255, 0.07);
     --border-muted: rgba(255, 255, 255, 0.12);
+    --section-border-hover: rgba(255, 255, 255, 0.09);
     --text-primary: #f4f4f5;
     --text-secondary: #a1a1aa;
     --text-muted: #71717a;
     --accent: #d97706;
-    --accent-muted: rgba(217, 119, 6, 0.2);
-    --accent-soft: rgba(217, 119, 6, 0.1);
-    --glow-primary: rgba(217, 119, 6, 0.06);
-    --glow-secondary: rgba(180, 83, 9, 0.04);
-    --glow-center: rgba(217, 119, 6, 0.03);
+    --accent-muted: rgba(217, 119, 6, 0.12);
+    --accent-soft: rgba(217, 119, 6, 0.05);
+    --glow-primary: transparent;
+    --glow-secondary: transparent;
+    --glow-center: rgba(217, 119, 6, 0.004);
     --shadow-panel: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     --dot-active: #d97706;
     --dot-inactive: rgba(255, 255, 255, 0.35);
@@ -35,23 +36,24 @@
     color-scheme: dark;
 }
 
-/* Light theme — single warm base (#eae0d5 sand); all surfaces blend; no pure white */
+/* Light theme — no brightness lift on hover/open; stays consistent like dark */
 [data-theme='light'] {
     --bg-base: #ebe0d4;
     --bg-panel: #e2d6c8;
-    --bg-panel-hover: #e6dbcf;
-    --bg-card: #dfd2c2;
-    --bg-card-hover: #e4d9cc;
+    --bg-panel-hover: #e2d6c8;
+    --bg-card: #e1d5c7;
+    --bg-card-hover: #e1d5c7;
     --border-subtle: rgba(70, 55, 45, 0.12);
     --border-muted: rgba(70, 55, 45, 0.2);
+    --section-border-hover: rgba(70, 55, 45, 0.15);
     --text-primary: #1c1917;
     --text-secondary: #57534e;
     --text-muted: #78716c;
     --accent: #b45309;
-    --accent-muted: rgba(180, 83, 9, 0.22);
-    --accent-soft: rgba(180, 83, 9, 0.12);
-    --glow-primary: rgba(217, 119, 6, 0.1);
-    --glow-secondary: rgba(180, 83, 9, 0.05);
+    --accent-muted: rgba(180, 83, 9, 0.28);
+    --accent-soft: rgba(200, 120, 40, 0.28);
+    --glow-primary: rgba(217, 119, 6, 0.04);
+    --glow-secondary: rgba(180, 83, 9, 0.015);
     --glow-center: rgba(217, 119, 6, 0.04);
     --shadow-panel: 0 25px 50px -12px rgba(50, 40, 30, 0.15);
     --dot-active: #b45309;
