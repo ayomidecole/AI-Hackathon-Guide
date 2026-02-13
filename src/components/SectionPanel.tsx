@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Section } from '../content/sections';
+
+const HOVER_GLOW =
+    '0 0 36px var(--glow-primary), 0 0 12px var(--glow-secondary)';
 
 interface SectionPanelProps {
     section: Section;
@@ -16,6 +19,7 @@ export function SectionPanel({
     onToggle,
     children,
 }: SectionPanelProps) {
+    const [isHovered, setIsHovered] = useState(false);
     const hasTools = section.tools.length > 0;
     const contributors = section.contributors ?? [];
     const showContributors = !hasTools && contributors.length > 0;
@@ -26,11 +30,21 @@ export function SectionPanel({
 
     const hideHeader = showContributors;
 
+    const showPanelShadow = !hideHeader && isOpen;
+    const boxShadow =
+        showPanelShadow && isHovered
+            ? `var(--shadow-panel), ${HOVER_GLOW}`
+            : showPanelShadow
+              ? 'var(--shadow-panel)'
+              : isHovered
+                ? HOVER_GLOW
+                : undefined;
+
     return (
         <div
             className={clsx(
-                'border transition-all duration-300 overflow-hidden',
-                'hover:opacity-[0.98]',
+                'border transition-all duration-[350ms] overflow-hidden ease-out',
+                'hover:-translate-y-1 hover:scale-[1.008]',
                 !hideHeader && isOpen && 'shadow-lg',
             )}
             style={{
@@ -41,12 +55,15 @@ export function SectionPanel({
                       : 'var(--bg-card)',
                 borderColor: hideHeader
                     ? 'var(--border-subtle)'
-                    : isOpen
+                    : isHovered
                       ? 'var(--border-muted)'
-                      : 'var(--border-subtle)',
-                boxShadow:
-                    !hideHeader && isOpen ? 'var(--shadow-panel)' : undefined,
+                      : isOpen
+                        ? 'var(--border-muted)'
+                        : 'var(--border-subtle)',
+                boxShadow,
             }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             {!hideHeader && (
                 <button
