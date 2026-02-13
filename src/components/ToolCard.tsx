@@ -133,21 +133,6 @@ export function ToolCard({
                             </ul>
                         </div>
                     ))}
-
-                    <a
-                        href={tool.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors border hover:opacity-90 w-fit"
-                        style={{
-                            backgroundColor: 'var(--bg-card)',
-                            borderColor: 'var(--border-muted)',
-                            color: 'var(--text-primary)',
-                        }}
-                    >
-                        Visit website{' '}
-                        <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-                    </a>
                 </div>
             </div>
         </div>
