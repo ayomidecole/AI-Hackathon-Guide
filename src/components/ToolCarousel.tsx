@@ -150,9 +150,9 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   };
 
   const navButtonStyle: React.CSSProperties = {
-    backgroundColor: 'var(--bg-card)',
-    borderColor: 'var(--border-muted)',
-    color: 'var(--text-secondary)',
+    backgroundColor: 'var(--accent-soft)',
+    borderColor: 'var(--accent-muted)',
+    color: 'var(--accent)',
   };
 
   const cardAnimationClass =

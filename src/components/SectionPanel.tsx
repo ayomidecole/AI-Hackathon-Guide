@@ -120,17 +120,11 @@ export function SectionPanel({
                     <span
                         className={clsx(
                             'shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-colors',
-                            isOpen &&
-                                'border-[var(--accent)] text-[var(--accent)]',
                         )}
                         style={{
-                            backgroundColor: isOpen
-                                ? 'var(--accent-soft)'
-                                : 'var(--bg-card)',
-                            borderColor: isOpen
-                                ? 'var(--accent-muted)'
-                                : 'var(--border-muted)',
-                            color: isOpen ? undefined : 'var(--text-muted)',
+                            backgroundColor: 'var(--accent-soft)',
+                            borderColor: 'var(--accent-muted)',
+                            color: 'var(--accent)',
                         }}
                         aria-hidden
                     >
