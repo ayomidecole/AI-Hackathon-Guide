@@ -8,13 +8,15 @@ interface ToolCarouselProps {
   tools: Tool[];
   /** When true and section just opened, carousel will take focus for keyboard nav */
   isSectionOpen?: boolean;
+  /** Callback when user clicks "Ask AI" on a tool */
+  onAskAI?: (tool: Tool) => void;
 }
 
 const EXIT_DURATION_MS = 180;
 const ENTER_DURATION_MS = 240;
 const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
 
-export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps) {
+export function ToolCarousel({ tools, isSectionOpen = false, onAskAI }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
   const [cardExpanded, setCardExpanded] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -197,6 +199,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
           tool={current}
           expanded={cardExpanded}
           onExpandToggle={setCardExpanded}
+          onAskAI={onAskAI}
         />
         </div>
         <div className="flex items-center justify-center gap-2 max-md:gap-3">

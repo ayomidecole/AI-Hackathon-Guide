@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Tool } from '../content/sections';
 
@@ -8,12 +8,15 @@ interface ToolCardProps {
     /** When provided, card expand/collapse is controlled by the parent (e.g. for keyboard). */
     expanded?: boolean;
     onExpandToggle?: (expanded: boolean) => void;
+    /** Callback when user clicks "Ask AI" */
+    onAskAI?: (tool: Tool) => void;
 }
 
 export function ToolCard({
     tool,
     expanded: controlledExpanded,
     onExpandToggle,
+    onAskAI,
 }: ToolCardProps) {
     const [internalExpanded, setInternalExpanded] = useState(true);
     const isControlled =
@@ -96,6 +99,33 @@ export function ToolCard({
                     className="p-5 pt-4 space-y-4 max-md:p-4 max-md:pt-3 overflow-y-auto max-h-[78vh]"
                     style={{ backgroundColor: 'var(--bg-card-hover)' }}
                 >
+                    {onAskAI && (
+                        <button
+                            type="button"
+                            onClick={() =>
+                                onAskAI({
+                                    id: tool.id,
+                                    name: tool.name,
+                                    description: tool.description,
+                                    tagline: tool.tagline,
+                                    bullets: tool.bullets,
+                                    url: tool.url,
+                                    detailsGuide: tool.detailsGuide,
+                                    detailsSections: tool.detailsSections,
+                                    imageUrl: tool.imageUrl,
+                                })
+                            }
+                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors border theme-hover-opacity theme-accent-interaction w-fit"
+                            style={{
+                                backgroundColor: 'var(--accent-soft)',
+                                borderColor: 'var(--accent-muted)',
+                                color: 'var(--accent)',
+                            }}
+                        >
+                            <Sparkles className="w-3.5 h-3.5" />
+                            Ask AI
+                        </button>
+                    )}
                     {tool.detailsGuide && (
                         <a
                             href={tool.detailsGuide.url}
