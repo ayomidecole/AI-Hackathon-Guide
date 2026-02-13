@@ -73,7 +73,7 @@ export function SectionPanel({
     return (
         <div
             className={clsx(
-                'border transition-all duration-[350ms] overflow-hidden ease-out',
+                'border transition-all duration-[350ms] overflow-hidden ease-out min-w-0',
                 !hideHeader && isOpen && 'shadow-lg',
             )}
             style={{
@@ -101,7 +101,7 @@ export function SectionPanel({
             {!hideHeader && (
                 <button
                     onClick={onToggle}
-                    className="w-full flex items-center justify-between gap-4 p-5 md:p-6 max-md:p-4 max-md:gap-3 max-md:touch-manipulation text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
+                    className="w-full min-w-0 flex flex-nowrap items-center justify-between gap-3 p-5 md:p-6 max-md:p-4 max-md:gap-3 max-md:touch-manipulation text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
                     style={{
                         backgroundColor:
                             isHovered || isOpen

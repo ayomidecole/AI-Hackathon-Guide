@@ -157,8 +157,8 @@ function App() {
                         id="sections"
                         className="flex-1 min-w-0 overflow-auto max-md:overflow-x-hidden"
                     >
-                        <div className="w-full py-10 md:py-14 px-6 md:px-10 max-md:py-5 max-md:px-4">
-                            <div className="space-y-4 max-md:space-y-3">
+                        <div className="w-full min-w-0 py-10 md:py-14 px-6 md:px-10 max-md:py-5 max-md:px-4">
+                            <div className="min-w-0 space-y-4 max-md:space-y-3">
                                 {sections.map((section) => {
                                     const contributors =
                                         section.contributors ?? [];
