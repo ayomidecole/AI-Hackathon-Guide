@@ -26,7 +26,7 @@ export function ToolCard({
     return (
         <div
             className={clsx(
-                'rounded-2xl border overflow-hidden transition-colors duration-200 hover:opacity-[0.98]',
+                'rounded-2xl border overflow-hidden transition-colors duration-200 theme-hover-opacity',
             )}
             style={{
                 backgroundColor: 'var(--bg-card)',
@@ -66,7 +66,7 @@ export function ToolCard({
 
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="mt-4 max-md:mt-3 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-90 max-md:text-xs max-md:touch-manipulation"
+                    className="mt-4 max-md:mt-3 flex items-center justify-between gap-2 w-full py-2 rounded-lg text-sm font-medium transition-colors theme-hover-opacity max-md:text-xs max-md:touch-manipulation"
                     style={{ color: 'var(--accent)' }}
                 >
                     <span>{isExpanded ? 'Less details' : 'More details'}</span>
@@ -83,11 +83,14 @@ export function ToolCard({
                     'border-t overflow-hidden transition-all duration-300 ease-out',
                     isExpanded
                         ? tool.detailsSections?.length
-                            ? 'max-h-[80vh] opacity-100'
-                            : 'max-h-[420px] opacity-100'
-                        : 'max-h-0 opacity-0',
+                            ? 'max-h-[80vh]'
+                            : 'max-h-[420px]'
+                        : 'max-h-0',
                 )}
-                style={{ borderColor: 'var(--border-subtle)' }}
+                style={{
+                    borderColor: 'var(--border-subtle)',
+                    opacity: isExpanded ? 1 : 'var(--content-collapse-opacity)',
+                }}
             >
                 <div
                     className="p-5 pt-4 space-y-4 max-md:p-4 max-md:pt-3 overflow-y-auto max-h-[78vh]"
@@ -98,7 +101,7 @@ export function ToolCard({
                             href={tool.detailsGuide.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors border hover:opacity-90 w-fit"
+                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors border theme-hover-opacity w-fit"
                             style={{
                                 backgroundColor: 'var(--accent-soft)',
                                 borderColor: 'var(--accent-muted)',

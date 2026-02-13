@@ -120,17 +120,11 @@ export function SectionPanel({
                     <span
                         className={clsx(
                             'shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-colors',
-                            isOpen &&
-                                'border-[var(--accent)] text-[var(--accent)]',
                         )}
                         style={{
-                            backgroundColor: isOpen
-                                ? 'var(--accent-soft)'
-                                : 'var(--bg-card)',
-                            borderColor: isOpen
-                                ? 'var(--accent-muted)'
-                                : 'var(--border-muted)',
-                            color: isOpen ? undefined : 'var(--text-muted)',
+                            backgroundColor: 'var(--accent-soft)',
+                            borderColor: 'var(--accent-muted)',
+                            color: 'var(--accent)',
                         }}
                         aria-hidden
                     >
@@ -147,11 +141,17 @@ export function SectionPanel({
                 className={clsx(
                     'overflow-hidden transition-all duration-300 ease-out',
                     hideHeader
-                        ? 'max-h-[2000px] opacity-100'
+                        ? 'max-h-[2000px]'
                         : isOpen
-                          ? 'max-h-[2000px] opacity-100'
-                          : 'max-h-0 opacity-0',
+                          ? 'max-h-[2000px]'
+                          : 'max-h-0',
                 )}
+                style={{
+                    opacity:
+                        hideHeader || isOpen
+                            ? 1
+                            : 'var(--content-collapse-opacity)',
+                }}
             >
                 <div
                     className="p-5 md:p-6 pt-0 border-t max-md:p-4 max-md:pt-0 max-md:pt-4"

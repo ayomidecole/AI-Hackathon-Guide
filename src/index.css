@@ -30,6 +30,8 @@
     --dot-active: #d97706;
     --dot-inactive: rgba(255, 255, 255, 0.35);
     --tool-card-slide-opacity: 0.2;
+    --interactive-hover-opacity: 0.9;
+    --content-collapse-opacity: 0;
     color-scheme: dark;
 }
 
@@ -55,6 +57,8 @@
     --dot-active: #b45309;
     --dot-inactive: rgba(60, 50, 40, 0.35);
     --tool-card-slide-opacity: 1;
+    --interactive-hover-opacity: 1;
+    --content-collapse-opacity: 1;
     --glass-blur: 20px;
     --glass-edge: rgba(60, 50, 40, 0.06);
     color-scheme: light;
@@ -95,6 +99,15 @@ body,
         var(--glow-secondary) 55%,
         transparent 75%
     );
+}
+
+/* In light mode, avoid opacity hover dimming that can wash accents to pale/white */
+.theme-hover-opacity {
+    transition: opacity 0.2s ease;
+}
+
+.theme-hover-opacity:hover {
+    opacity: var(--interactive-hover-opacity);
 }
 
 @keyframes tool-card-slide-out-left {

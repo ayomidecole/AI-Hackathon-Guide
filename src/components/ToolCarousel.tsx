@@ -150,9 +150,9 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   };
 
   const navButtonStyle: React.CSSProperties = {
-    backgroundColor: 'var(--bg-card)',
-    borderColor: 'var(--border-muted)',
-    color: 'var(--text-secondary)',
+    backgroundColor: 'var(--accent-soft)',
+    borderColor: 'var(--accent-muted)',
+    color: 'var(--accent)',
   };
 
   const cardAnimationClass =
@@ -181,7 +181,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
           type="button"
           onClick={goPrev}
           disabled={!hasPrev || isAnimating}
-          className="hidden md:flex shrink-0 w-10 h-10 rounded-xl items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none"
+          className="hidden md:flex shrink-0 w-10 h-10 rounded-xl items-center justify-center border transition-colors theme-hover-opacity disabled:opacity-40 disabled:pointer-events-none"
           style={navButtonStyle}
           aria-label="Previous tool"
         >
@@ -204,7 +204,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
             type="button"
             onClick={goPrev}
             disabled={!hasPrev || isAnimating}
-            className="md:hidden shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
+            className="md:hidden shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
             style={navButtonStyle}
             aria-label="Previous tool"
           >
@@ -237,7 +237,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
             type="button"
             onClick={goNext}
             disabled={!hasNext || isAnimating}
-            className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
+            className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
             style={navButtonStyle}
             aria-label="Next tool"
           >
