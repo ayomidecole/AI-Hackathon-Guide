@@ -3,12 +3,39 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 const DEFAULT_SYSTEM_PROMPT =
   'You are an assistant for the AI Hackathon Guide. Help users find tools, compare options (e.g. Cursor vs Replit), and get quick tips for building AI apps during hackathons. Be concise and actionable.'
 
+const GUIDE_TOOL_CATEGORIES = {
+  'Development tools': ['Cursor', 'Replit', 'Claude Code', 'Lovable'],
+  Databases: ['Supabase'],
+  Auth: ['Clerk', 'Auth0', 'NextAuth'],
+  Deployment: ['Netlify', 'Vercel', 'Railway'],
+  Terminal: ['Warp'],
+  APIs: ['OpenAI API'],
+} as const
+
+const GUIDE_TOOLS_OVERVIEW = Object.entries(GUIDE_TOOL_CATEGORIES)
+  .map(([category, tools]) => `- ${category}: ${tools.join(', ')}`)
+  .join('\n')
+
 function buildSystemPrompt(opts: {
   mode?: string
   context?: { toolId: string; toolName: string; toolDescription: string }
 }): string {
   if (opts.mode === 'suggest-stack') {
-    return `You are a hackathon stack advisor. Given the user's idea, suggest 2-3 tools from this guide (dev tools, databases, auth, deployment) and briefly explain why. Be concise.`
+    return [
+      'You are a hackathon stack advisor focused on vibe-coding speed.',
+      'Prioritize tools from this AI Hackathon Guide first, because they are already curated in-app.',
+      'Only include a non-guide tool when absolutely necessary, and only if it is widely used and easy to set up.',
+      '',
+      'Guide tools:',
+      GUIDE_TOOLS_OVERVIEW,
+      '',
+      'Response rules:',
+      '1) Recommend 3-5 tools for the user idea (covering dev, backend/data, auth, deployment when relevant).',
+      '2) Favor tools that are popular for vibe coding and quick to start.',
+      '3) For each recommended tool, include: why it fits + setup effort (example: "setup: 5-15 min").',
+      '4) Keep it concise and actionable with bullet points.',
+      '5) If the idea is vague, ask one clarifying question and also provide a sensible default stack.',
+    ].join('\n')
   }
   if (opts.context) {
     return `The user is asking about ${opts.context.toolName}. Use this description: ${opts.context.toolDescription}. Answer their question concisely.`
