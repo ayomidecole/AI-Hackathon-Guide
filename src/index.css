@@ -285,6 +285,25 @@ body,
   color: var(--text-secondary);
 }
 
+.chat-panel-markdown {
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.chat-panel-markdown h1,
+.chat-panel-markdown h2,
+.chat-panel-markdown h3 {
+  font-weight: 600;
+  margin-top: 0.75em;
+  margin-bottom: 0.25em;
+}
+.chat-panel-markdown code {
+  font-size: 0.9em;
+  padding: 0.15em 0.35em;
+  border-radius: 0.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+
 [data-theme='light'] .chat-panel-modal {
   background-color: var(--bg-panel);
 }

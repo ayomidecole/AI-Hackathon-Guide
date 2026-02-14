@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Send, Loader2, Bot } from 'lucide-react';
 import { clsx } from 'clsx';
+import ReactMarkdown from 'react-markdown';
 
 export interface Message {
     role: 'user' | 'assistant';
@@ -187,9 +188,15 @@ export function ChatPanel({
                             <span className="font-medium chat-panel-message-label text-xs block mb-1">
                                 {m.role === 'user' ? 'You' : 'Assistant'}
                             </span>
-                            <div className="whitespace-pre-wrap break-words">
-                                {m.content}
-                            </div>
+                            {m.role === 'assistant' ? (
+                                <div className="chat-panel-markdown break-words [&_p]:my-1 [&_ul]:my-2 [&_ol]:my-2 [&_li]:my-0.5 [&_strong]:font-semibold [&_strong]:text-[var(--text-primary)] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:underline [&_a]:text-[var(--accent)]">
+                                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                                </div>
+                            ) : (
+                                <div className="whitespace-pre-wrap break-words">
+                                    {m.content}
+                                </div>
+                            )}
                         </div>
                     ))}
                     {loading && (

@@ -27,24 +27,21 @@ function buildSystemPrompt(opts: {
 }): string {
   if (opts.mode === 'suggest-stack') {
     return [
-      'You are a hackathon stack advisor focused on vibe-coding quality.',
-      'Pick the best-fit stack for the user idea first; do not force only-guide recommendations.',
-      'Then prioritize tools from this AI Hackathon Guide whenever they are a strong fit.',
-      'If a guide tool is not the best fit for a category, recommend a popular vibe-coder alternative.',
-      'Optimize for beginner-friendly quality: polished demo outcomes with low complexity.',
-      'Prefer tools with great defaults, easy onboarding, and low chance of users getting stuck.',
+      'You suggest tech stacks for vibe coders (AI-assisted coding, minimal config, ship fast).',
       '',
-      'Guide tools:',
+      'NEVER recommend these as the main stack: Node.js, Express, React (by itself), MongoDB, Firebase (generic). They are generic code-first options. You MUST recommend tools from the Guide list below instead.',
+      '',
+      'Guide tools — you MUST pick at least 2–3 of these by name in every response:',
       GUIDE_TOOLS_OVERVIEW,
       '',
-      'Popular vibe-coder tools outside the guide you may consider when they are a better fit: Firebase, Neon, Upstash, Resend, Cloudflare Workers/Pages, Render, Bolt.new, v0.',
+      'Example of a CORRECT response for "a task app":',
+      '- **Cursor** [Guide] — Your AI pair programmer. Describe the task app in chat; Cursor scaffolds the UI and logic. Setup: already in your editor. Use Plan Mode (Shift+Tab) to get a step-by-step before it writes code.',
+      '- **Supabase** [Guide] — Database and auth in one. Create tables in the dashboard, get a ready API. No SQL or server code. Use the client lib; ask Cursor to wire it to your frontend.',
+      '- **Vercel** [Guide] — One-click deploy from Git. Push and it builds and ships. Connect your repo; no config for a typical Next/Vite app.',
       '',
-      'Response rules:',
-      '1) Recommend 3-5 tools for the user idea (covering dev, backend/data, auth, deployment when relevant).',
-      '2) For each tool, include: why it is a good fit for a non-expert + setup effort (example: "setup: 5-15 min") + label as [Guide] or [Popular].',
-      '3) Mention one simple caveat in plain language when relevant.',
-      '4) Keep it concise, actionable, and in bullet points.',
-      '5) If the idea is vague, ask one clarifying question and also provide a sensible default stack.',
+      'Example of a WRONG response (do not do this): "Node.js for the backend, MongoDB for data, Firebase Auth for login" — that is a generic stack with zero Guide tools.',
+      '',
+      'For each tool you recommend: **Name** [Guide] or [Other], one line why it fits, setup effort, then 1 sentence on how to use it as a vibe coder (e.g. "Ask Cursor to add auth" or "Supabase dashboard for tables"). Use markdown bullets and **bold** names. Keep it short.',
     ].join('\n')
   }
   if (opts.context) {
@@ -92,6 +89,7 @@ export default async function handler(
     })),
   ]
 
+  const model = body.mode === 'suggest-stack' ? 'gpt-4o' : 'gpt-4o-mini'
   try {
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -100,7 +98,7 @@ export default async function handler(
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model,
         messages,
       }),
     })
