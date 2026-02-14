@@ -15,7 +15,59 @@ interface ChatPanelProps {
     toolContext?: { toolId: string; toolName: string; toolDescription: string };
 }
 
-const API_BASE = '';
+const API_BASE = (
+    (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() || ''
+).replace(/\/$/, '');
+const CHAT_REQUEST_TIMEOUT_MS = 30_000;
+
+interface ChatApiResponse {
+    error?: string;
+    choices?: { message?: { content?: string } }[];
+}
+
+function isAbortError(error: unknown): boolean {
+    return (
+        error instanceof DOMException && error.name.toLowerCase() === 'aborterror'
+    );
+}
+
+function getNetworkErrorMessage(error: unknown): string {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        return 'You appear to be offline. Check your connection and try again.';
+    }
+    if (isAbortError(error)) {
+        return 'The assistant request timed out. Please try again.';
+    }
+    return 'Unable to reach the AI assistant. If this persists, verify your API server URL and try again.';
+}
+
+function getHttpErrorMessage(status: number, body: ChatApiResponse | null): string {
+    const message = body?.error?.trim();
+    if (message) {
+        return message;
+    }
+    if (status === 404) {
+        return 'Chat API endpoint not found. Set VITE_API_BASE_URL if your API is hosted on another origin.';
+    }
+    if (status >= 500) {
+        return 'Assistant service is temporarily unavailable. Please try again.';
+    }
+    return `Request failed (${status}).`;
+}
+
+async function parseJsonBody(
+    res: Response
+): Promise<{ body: ChatApiResponse | null; rawText: string }> {
+    const rawText = await res.text();
+    if (!rawText) {
+        return { body: null, rawText };
+    }
+    try {
+        return { body: JSON.parse(rawText) as ChatApiResponse, rawText };
+    } catch {
+        return { body: null, rawText };
+    }
+}
 
 export function ChatPanel({
     isOpen,
@@ -57,6 +109,11 @@ export function ChatPanel({
         ];
 
         try {
+            const controller = new AbortController();
+            const timeoutId = window.setTimeout(
+                () => controller.abort(),
+                CHAT_REQUEST_TIMEOUT_MS
+            );
             const res = await fetch(`${API_BASE}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -65,26 +122,38 @@ export function ChatPanel({
                     mode: mode || undefined,
                     context: toolContext || undefined,
                 }),
+                signal: controller.signal,
+            }).finally(() => {
+                window.clearTimeout(timeoutId);
             });
-
-            const data = (await res.json()) as {
-                error?: string;
-                choices?: { message?: { content?: string } }[];
-            };
+            const { body: data, rawText } = await parseJsonBody(res);
 
             if (!res.ok) {
-                setError(data.error || 'Failed to get response');
+                setError(getHttpErrorMessage(res.status, data));
                 return;
             }
 
-            const content =
-                data.choices?.[0]?.message?.content || 'No response received.';
+            if (!data) {
+                const looksLikeHtml = rawText.trimStart().startsWith('<');
+                setError(
+                    looksLikeHtml
+                        ? 'Assistant returned an unexpected response format. Check API URL configuration.'
+                        : 'Assistant returned an unreadable response. Please try again.'
+                );
+                return;
+            }
+
+            const content = data.choices?.[0]?.message?.content;
+            if (!content) {
+                setError('No response received from assistant.');
+                return;
+            }
             setMessages((prev) => [
                 ...prev,
                 { role: 'assistant', content },
             ]);
-        } catch {
-            setError('Network error. Please try again.');
+        } catch (error) {
+            setError(getNetworkErrorMessage(error));
         } finally {
             setLoading(false);
         }

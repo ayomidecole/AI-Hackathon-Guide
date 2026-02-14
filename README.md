@@ -18,7 +18,11 @@ The guide includes an AI assistant that helps you find tools, compare options, a
    ```bash
    export OPENAI_API_KEY="your_api_key_here"
    ```
-3. Run `npm run dev` and open the chat from the sidebar.
+3. If your API is hosted on a different origin, set:
+   ```bash
+   export VITE_API_BASE_URL="https://your-api-host.example.com"
+   ```
+4. Run `npm run dev` and open the chat from the sidebar.
 
 ### Production (Vercel)
 
