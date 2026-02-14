@@ -67,6 +67,46 @@ export const sections: Section[] = [
                 ],
             },
             {
+                id: 'codex',
+                name: 'Codex',
+                tagline: 'AI coding agent for web and desktop',
+                description:
+                    'Codex helps you plan, edit, and ship code faster. Use the web app for quick guidance and the desktop app for deep repo work with local files and terminal commands.',
+                bullets: [
+                    'Web app for quick coding help',
+                    'Desktop app for repo-level execution',
+                    'Planning, implementation, and review',
+                ],
+                url: 'https://chatgpt.com',
+                detailsGuide: {
+                    label: 'OpenAI developer docs',
+                    url: 'https://platform.openai.com/docs/overview',
+                },
+                detailsSections: [
+                    {
+                        heading: 'Web app vs desktop app',
+                        items: [
+                            'Use the Codex web app for fast ideation: architecture questions, debugging help, API examples, and implementation plans when you are away from your local environment.',
+                            'Use the Codex desktop app when you need execution: reading and editing repo files, running terminal commands, applying patches, and validating changes in the actual project workspace.',
+                        ],
+                    },
+                    {
+                        heading: 'Hackathon workflow',
+                        items: [
+                            'Start in the web app to shape the MVP scope, pick the stack, and outline milestones.',
+                            'Move to the desktop app to implement features end-to-end, run checks, and iterate on real code quickly.',
+                        ],
+                    },
+                    {
+                        heading: 'Prompting tips',
+                        items: [
+                            'Give concrete constraints: framework, target file paths, expected API behavior, and acceptance criteria.',
+                            'Ask for small, testable increments and request verification steps after each change to keep delivery reliable.',
+                        ],
+                    },
+                ],
+            },
+            {
                 id: 'replit',
                 name: 'Replit',
                 tagline: 'Browser-based IDE',
