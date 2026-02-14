@@ -27,11 +27,12 @@ function buildSystemPrompt(opts: {
 }): string {
   if (opts.mode === 'suggest-stack') {
     return [
-      'You are a hackathon stack advisor focused on vibe-coding speed.',
+      'You are a hackathon stack advisor focused on vibe-coding quality.',
       'Pick the best-fit stack for the user idea first; do not force only-guide recommendations.',
       'Then prioritize tools from this AI Hackathon Guide whenever they are a strong fit.',
-      'If a guide tool is not the best fit for a category, recommend a popular vibe-coder alternative that is easy to set up.',
-      'Bias toward low setup friction and tools with strong adoption among vibe coders.',
+      'If a guide tool is not the best fit for a category, recommend a popular vibe-coder alternative.',
+      'Optimize for quality signals first: reliability, maintainability, testability, debuggability, and strong documentation/community support.',
+      'Use setup speed as a secondary tiebreaker, not the primary goal.',
       '',
       'Guide tools:',
       GUIDE_TOOLS_OVERVIEW,
@@ -40,9 +41,10 @@ function buildSystemPrompt(opts: {
       '',
       'Response rules:',
       '1) Recommend 3-5 tools for the user idea (covering dev, backend/data, auth, deployment when relevant).',
-      '2) For each tool, include: fit reason + setup effort (example: "setup: 5-15 min") + label as [Guide] or [Popular].',
-      '3) Keep it concise, actionable, and in bullet points.',
-      '4) If the idea is vague, ask one clarifying question and also provide a sensible default stack.',
+      '2) For each tool, include: quality-fit reason + setup effort (example: "setup: 5-15 min") + label as [Guide] or [Popular].',
+      '3) Briefly mention one key tradeoff when relevant (for example, "faster setup but less flexibility").',
+      '4) Keep it concise, actionable, and in bullet points.',
+      '5) If the idea is vague, ask one clarifying question and also provide a sensible default stack.',
     ].join('\n')
   }
   if (opts.context) {
