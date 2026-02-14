@@ -21,6 +21,88 @@ function buildGuideToolsOverview(): string {
 
 const GUIDE_TOOLS_OVERVIEW = buildGuideToolsOverview()
 
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions'
+const OPENAI_TIMEOUT_MS = 25_000
+const MAX_OPENAI_ATTEMPTS = 3
+const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504])
+
+type ChatCompletionResponse = {
+  choices?: { message?: { content?: string } }[]
+  error?: { message?: string }
+  [key: string]: unknown
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function isAbortError(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'name' in error &&
+    (error as { name?: string }).name === 'AbortError'
+  )
+}
+
+async function requestOpenAI(opts: {
+  apiKey: string
+  messages: { role: 'system' | 'user' | 'assistant'; content: string }[]
+}): Promise<Response> {
+  let lastError: unknown
+  for (let attempt = 1; attempt <= MAX_OPENAI_ATTEMPTS; attempt += 1) {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), OPENAI_TIMEOUT_MS)
+    try {
+      const response = await fetch(OPENAI_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${opts.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: opts.messages,
+        }),
+        signal: controller.signal,
+      })
+
+      if (
+        RETRYABLE_STATUS_CODES.has(response.status) &&
+        attempt < MAX_OPENAI_ATTEMPTS
+      ) {
+        await sleep(400 * 2 ** (attempt - 1))
+        continue
+      }
+      return response
+    } catch (error) {
+      lastError = error
+      if (attempt < MAX_OPENAI_ATTEMPTS) {
+        await sleep(400 * 2 ** (attempt - 1))
+        continue
+      }
+      throw error
+    } finally {
+      clearTimeout(timeoutId)
+    }
+  }
+  throw lastError ?? new Error('OpenAI request failed')
+}
+
+async function parseJsonResponse(
+  response: Response
+): Promise<ChatCompletionResponse | null> {
+  const raw = await response.text()
+  if (!raw) {
+    return null
+  }
+  try {
+    return JSON.parse(raw) as ChatCompletionResponse
+  } catch {
+    return null
+  }
+}
+
 function buildSystemPrompt(opts: {
   mode?: string
   context?: { toolId: string; toolName: string; toolDescription: string }
@@ -93,27 +175,25 @@ export default async function handler(
   ]
 
   try {
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages,
-      }),
-    })
+    const openaiRes = await requestOpenAI({ apiKey, messages })
+    const data = await parseJsonResponse(openaiRes)
 
-    const data = (await openaiRes.json()) as { error?: { message?: string } }
     if (!openaiRes.ok) {
-      res
-        .status(openaiRes.status)
-        .json({ error: data.error?.message || 'OpenAI API error' })
+      res.status(openaiRes.status).json({
+        error: data?.error?.message || 'OpenAI API error',
+      })
+      return
+    }
+    if (!data) {
+      res.status(502).json({ error: 'Received invalid response from OpenAI' })
       return
     }
     res.status(200).json(data)
-  } catch {
-    res.status(500).json({ error: 'Internal server error' })
+  } catch (error) {
+    res.status(503).json({
+      error: isAbortError(error)
+        ? 'Request to OpenAI timed out. Please try again.'
+        : 'Unable to reach OpenAI. Please try again.',
+    })
   }
 }
