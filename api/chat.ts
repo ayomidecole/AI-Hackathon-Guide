@@ -1,20 +1,25 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { sections } from '../src/content/sections'
 
 const DEFAULT_SYSTEM_PROMPT =
   'You are an assistant for the AI Hackathon Guide. Help users find tools, compare options (e.g. Cursor vs Replit), and get quick tips for building AI apps during hackathons. Be concise and actionable.'
 
-const GUIDE_TOOL_CATEGORIES = {
-  'Development tools': ['Cursor', 'Replit', 'Claude Code', 'Lovable'],
-  Databases: ['Supabase'],
-  Auth: ['Clerk', 'Auth0', 'NextAuth'],
-  Deployment: ['Netlify', 'Vercel', 'Railway'],
-  Terminal: ['Warp'],
-  APIs: ['OpenAI API'],
-} as const
+function buildGuideToolsOverview(): string {
+  const toolsBySection = sections
+    .filter((section) => section.tools.length > 0)
+    .map((section) => {
+      const toolNames = section.tools.map((tool) => tool.name).join(', ')
+      return `- ${section.title}: ${toolNames}`
+    })
 
-const GUIDE_TOOLS_OVERVIEW = Object.entries(GUIDE_TOOL_CATEGORIES)
-  .map(([category, tools]) => `- ${category}: ${tools.join(', ')}`)
-  .join('\n')
+  if (toolsBySection.length === 0) {
+    return '- No tools listed in the guide yet.'
+  }
+
+  return toolsBySection.join('\n')
+}
+
+const GUIDE_TOOLS_OVERVIEW = buildGuideToolsOverview()
 
 function buildSystemPrompt(opts: {
   mode?: string
