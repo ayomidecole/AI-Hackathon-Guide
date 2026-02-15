@@ -276,6 +276,11 @@ export const sections: Section[] = [
                     label: 'Supabase quickstart',
                     url: 'https://supabase.com/docs/guides/getting-started',
                 },
+                detailsVideo: {
+                    title: 'Watch: Supabase setup for beginners',
+                    embedUrl: 'https://www.youtube.com/embed/7uKQBl9uZ00',
+                    watchUrl: 'https://www.youtube.com/watch?v=7uKQBl9uZ00',
+                },
                 detailsSections: [
                     {
                         heading: 'Setup in minutes',
@@ -322,6 +327,11 @@ export const sections: Section[] = [
                     label: 'Clerk quickstart',
                     url: 'https://clerk.com/docs/quickstarts/nextjs',
                 },
+                detailsVideo: {
+                    title: 'Watch: Clerk official setup walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/fsuHLafTYyg',
+                    watchUrl: 'https://www.youtube.com/watch?v=fsuHLafTYyg',
+                },
                 detailsSections: [
                     {
                         heading: 'Quick setup',
@@ -362,6 +372,13 @@ export const sections: Section[] = [
                     label: 'Auth0 quickstart',
                     url: 'https://auth0.com/docs/quickstart',
                 },
+                detailsVideo: {
+                    title: 'Watch: Auth0 official React quickstart playlist',
+                    embedUrl:
+                        'https://www.youtube.com/embed/videoseries?list=PLZ14qQz3cfJL6aoKZ_Ly7jiYrwi9ihviW',
+                    watchUrl:
+                        'https://www.youtube.com/playlist?list=PLZ14qQz3cfJL6aoKZ_Ly7jiYrwi9ihviW',
+                },
                 detailsSections: [
                     {
                         heading: 'Setup',
@@ -401,6 +418,11 @@ export const sections: Section[] = [
                 detailsGuide: {
                     label: 'NextAuth.js quickstart',
                     url: 'https://authjs.dev/getting-started/installation',
+                },
+                detailsVideo: {
+                    title: 'Watch: NextAuth beginner setup (community)',
+                    embedUrl: 'https://www.youtube.com/embed/NhBX6cTcTdI',
+                    watchUrl: 'https://www.youtube.com/watch?v=NhBX6cTcTdI',
                 },
                 detailsSections: [
                     {
@@ -448,6 +470,11 @@ export const sections: Section[] = [
                     label: 'Netlify deploy guide',
                     url: 'https://docs.netlify.com/site-deploys/create-deploys/',
                 },
+                detailsVideo: {
+                    title: 'Watch: Netlify official deployment intro',
+                    embedUrl: 'https://www.youtube.com/embed/wWZGjddjUlw',
+                    watchUrl: 'https://www.youtube.com/watch?v=wWZGjddjUlw',
+                },
                 detailsSections: [
                     {
                         heading: 'Deploy from Git',
@@ -488,6 +515,11 @@ export const sections: Section[] = [
                     label: 'Vercel deployment',
                     url: 'https://vercel.com/docs/deployments/overview',
                 },
+                detailsVideo: {
+                    title: 'Watch: Vercel deployment walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/sPmat30SE4k',
+                    watchUrl: 'https://www.youtube.com/watch?v=sPmat30SE4k',
+                },
                 detailsSections: [
                     {
                         heading: 'Deploy',
@@ -523,6 +555,11 @@ export const sections: Section[] = [
                 detailsGuide: {
                     label: 'Railway docs',
                     url: 'https://docs.railway.app/',
+                },
+                detailsVideo: {
+                    title: 'Watch: Railway beginner deploy flow (community)',
+                    embedUrl: 'https://www.youtube.com/embed/1sUWXpkxpq8',
+                    watchUrl: 'https://www.youtube.com/watch?v=1sUWXpkxpq8',
                 },
                 detailsSections: [
                     {
@@ -570,6 +607,11 @@ export const sections: Section[] = [
                     label: 'Warp docs',
                     url: 'https://docs.warp.dev/',
                 },
+                detailsVideo: {
+                    title: 'Watch: Warp terminal intro (community)',
+                    embedUrl: 'https://www.youtube.com/embed/gBdehHrtb94',
+                    watchUrl: 'https://www.youtube.com/watch?v=gBdehHrtb94',
+                },
                 detailsSections: [
                     {
                         heading: 'AI & productivity',
@@ -611,6 +653,11 @@ export const sections: Section[] = [
                 detailsGuide: {
                     label: 'OpenAI API quickstart',
                     url: 'https://platform.openai.com/docs/quickstart',
+                },
+                detailsVideo: {
+                    title: 'Watch: OpenAI Responses API intro (community)',
+                    embedUrl: 'https://www.youtube.com/embed/S2lUjCT0UXY',
+                    watchUrl: 'https://www.youtube.com/watch?v=S2lUjCT0UXY',
                 },
                 detailsSections: [
                     {
