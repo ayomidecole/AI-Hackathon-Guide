@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Tool } from '../content/sections';
@@ -13,6 +13,7 @@ interface ToolCarouselProps {
 const EXIT_DURATION_MS = 180;
 const ENTER_DURATION_MS = 240;
 const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
+const VIDEO_PRELOAD_RADIUS = 2;
 
 export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps) {
   const [index, setIndex] = useState(0);
@@ -32,6 +33,26 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   const hasNext = activeIndex < toolCount - 1;
   const isAnimating = animationStage !== 'idle';
   const minSwipeDistance = 48;
+  const preloadVideoUrls = useMemo(() => {
+    if (!isSectionOpen || toolCount <= 1) return [];
+
+    const urls = new Set<string>();
+
+    for (let offset = 1; offset <= VIDEO_PRELOAD_RADIUS; offset += 1) {
+      const previous = tools[activeIndex - offset];
+      const next = tools[activeIndex + offset];
+
+      if (previous?.detailsVideo?.embedUrl) {
+        urls.add(previous.detailsVideo.embedUrl);
+      }
+
+      if (next?.detailsVideo?.embedUrl) {
+        urls.add(next.detailsVideo.embedUrl);
+      }
+    }
+
+    return Array.from(urls);
+  }, [activeIndex, isSectionOpen, toolCount, tools]);
 
   useEffect(() => {
     if (animationStage !== 'out') return;
@@ -194,10 +215,13 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
           style={{ touchAction: 'pan-y' }}
         >
           <ToolCard
-          tool={current}
-          expanded={cardExpanded}
-          onExpandToggle={setCardExpanded}
-        />
+            key={current.id}
+            tool={current}
+            expanded={cardExpanded}
+            onExpandToggle={setCardExpanded}
+            preloadVideoUrls={preloadVideoUrls}
+            shouldPreloadVideos={isSectionOpen}
+          />
         </div>
         <div className="flex items-center justify-center gap-2 max-md:gap-3">
           <button

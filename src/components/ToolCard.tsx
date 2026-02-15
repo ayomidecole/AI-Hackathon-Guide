@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { Tool } from '../content/sections';
@@ -8,20 +8,50 @@ interface ToolCardProps {
     /** When provided, card expand/collapse is controlled by the parent (e.g. for keyboard). */
     expanded?: boolean;
     onExpandToggle?: (expanded: boolean) => void;
+    preloadVideoUrls?: string[];
+    shouldPreloadVideos?: boolean;
 }
 
 export function ToolCard({
     tool,
     expanded: controlledExpanded,
     onExpandToggle,
+    preloadVideoUrls = [],
+    shouldPreloadVideos = false,
 }: ToolCardProps) {
     const [internalExpanded, setInternalExpanded] = useState(true);
+    const [loadedEmbedUrls, setLoadedEmbedUrls] = useState<
+        Record<string, true>
+    >({});
     const isControlled =
         controlledExpanded !== undefined && onExpandToggle !== undefined;
     const isExpanded = isControlled ? controlledExpanded : internalExpanded;
     const setIsExpanded = isControlled
         ? (next: boolean) => onExpandToggle(next)
         : setInternalExpanded;
+    const detailsVideo = tool.detailsVideo;
+    const activeEmbedUrl = detailsVideo?.embedUrl;
+    const isActiveVideoLoaded = activeEmbedUrl
+        ? Boolean(loadedEmbedUrls[activeEmbedUrl])
+        : false;
+
+    const markVideoAsLoaded = (embedUrl: string) => {
+        setLoadedEmbedUrls((prev) =>
+            prev[embedUrl] ? prev : { ...prev, [embedUrl]: true },
+        );
+    };
+
+    const resolvedPreloadVideoUrls = useMemo(() => {
+        if (!shouldPreloadVideos || preloadVideoUrls.length === 0) return [];
+
+        const unique = new Set<string>();
+        for (const url of preloadVideoUrls) {
+            if (!url || url === activeEmbedUrl || unique.has(url)) continue;
+            unique.add(url);
+        }
+
+        return Array.from(unique);
+    }, [activeEmbedUrl, preloadVideoUrls, shouldPreloadVideos]);
 
     return (
         <div
@@ -113,36 +143,56 @@ export function ToolCard({
                         </a>
                     )}
 
-                    {tool.detailsVideo && (
+                    {detailsVideo && (
                         <div
-                            className="rounded-xl border p-3 space-y-2"
+                            className="rounded-xl border p-3 space-y-2 relative"
                             style={{ borderColor: 'var(--border-subtle)' }}
                         >
                             <p
                                 className="text-sm font-medium"
                                 style={{ color: 'var(--text-primary)' }}
                             >
-                                {tool.detailsVideo.title}
+                                {detailsVideo.title}
                             </p>
                             <div
-                                className="w-full overflow-hidden rounded-lg border aspect-video"
+                                className="relative w-full overflow-hidden rounded-lg border aspect-video"
                                 style={{
                                     borderColor: 'var(--border-subtle)',
                                 }}
                             >
+                                {!isActiveVideoLoaded && (
+                                    <div
+                                        className="absolute inset-0 z-10 flex items-center justify-center text-xs font-medium animate-pulse"
+                                        style={{
+                                            backgroundColor: 'var(--bg-card)',
+                                            color: 'var(--text-muted)',
+                                        }}
+                                    >
+                                        Loading video...
+                                    </div>
+                                )}
                                 <iframe
-                                    src={tool.detailsVideo.embedUrl}
-                                    title={tool.detailsVideo.title}
-                                    loading="lazy"
-                                    className="w-full h-full"
+                                    key={detailsVideo.embedUrl}
+                                    src={detailsVideo.embedUrl}
+                                    title={detailsVideo.title}
+                                    loading="eager"
+                                    onLoad={() =>
+                                        markVideoAsLoaded(detailsVideo.embedUrl)
+                                    }
+                                    className={clsx(
+                                        'w-full h-full transition-opacity duration-200',
+                                        isActiveVideoLoaded
+                                            ? 'opacity-100'
+                                            : 'opacity-0',
+                                    )}
                                     referrerPolicy="strict-origin-when-cross-origin"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
                                 />
                             </div>
-                            {tool.detailsVideo.watchUrl && (
+                            {detailsVideo.watchUrl && (
                                 <a
-                                    href={tool.detailsVideo.watchUrl}
+                                    href={detailsVideo.watchUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1.5 text-xs font-medium theme-hover-opacity"
@@ -152,6 +202,21 @@ export function ToolCard({
                                     <ExternalLink className="w-3 h-3" />
                                 </a>
                             )}
+                            {resolvedPreloadVideoUrls.map((embedUrl, idx) => (
+                                <iframe
+                                    key={embedUrl}
+                                    src={embedUrl}
+                                    title={`Preload video ${idx + 1}`}
+                                    loading="eager"
+                                    className="pointer-events-none absolute h-px w-px opacity-0"
+                                    style={{ left: '-9999px', top: 0 }}
+                                    tabIndex={-1}
+                                    aria-hidden
+                                    onLoad={() => markVideoAsLoaded(embedUrl)}
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                />
+                            ))}
                         </div>
                     )}
 
