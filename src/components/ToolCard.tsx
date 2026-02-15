@@ -82,7 +82,7 @@ export function ToolCard({
                 className={clsx(
                     'border-t overflow-hidden transition-all duration-300 ease-out',
                     isExpanded
-                        ? tool.detailsSections?.length
+                        ? tool.detailsSections?.length || tool.detailsVideo
                             ? 'max-h-[80vh]'
                             : 'max-h-[420px]'
                         : 'max-h-0',
@@ -111,6 +111,48 @@ export function ToolCard({
                             Read: {tool.detailsGuide.label}
                             <ExternalLink className="w-3.5 h-3.5" />
                         </a>
+                    )}
+
+                    {tool.detailsVideo && (
+                        <div
+                            className="rounded-xl border p-3 space-y-2"
+                            style={{ borderColor: 'var(--border-subtle)' }}
+                        >
+                            <p
+                                className="text-sm font-medium"
+                                style={{ color: 'var(--text-primary)' }}
+                            >
+                                {tool.detailsVideo.title}
+                            </p>
+                            <div
+                                className="w-full overflow-hidden rounded-lg border aspect-video"
+                                style={{
+                                    borderColor: 'var(--border-subtle)',
+                                }}
+                            >
+                                <iframe
+                                    src={tool.detailsVideo.embedUrl}
+                                    title={tool.detailsVideo.title}
+                                    loading="lazy"
+                                    className="w-full h-full"
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                />
+                            </div>
+                            {tool.detailsVideo.watchUrl && (
+                                <a
+                                    href={tool.detailsVideo.watchUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs font-medium theme-hover-opacity"
+                                    style={{ color: 'var(--accent)' }}
+                                >
+                                    Open on YouTube
+                                    <ExternalLink className="w-3 h-3" />
+                                </a>
+                            )}
+                        </div>
                     )}
 
                     {tool.detailsSections?.map((section, idx) => (

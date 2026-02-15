@@ -7,6 +7,8 @@ export interface Tool {
     url: string;
     /** Optional guide link + extra sections shown in "More details" (avoids iframe; many sites block embedding). */
     detailsGuide?: { label: string; url: string };
+    /** Optional embedded video shown in "More details". */
+    detailsVideo?: { title: string; embedUrl: string; watchUrl?: string };
     detailsSections?: { heading: string; items: string[] }[];
     imageUrl?: string;
 }
@@ -34,6 +36,11 @@ export const sections: Section[] = [
                 detailsGuide: {
                     label: 'Best practices for coding with agents',
                     url: 'https://cursor.com/blog/agent-best-practices',
+                },
+                detailsVideo: {
+                    title: 'Watch: Cursor walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/WVeYLlKOWc0',
+                    watchUrl: 'https://youtu.be/WVeYLlKOWc0?si=fo3YBV_dynf_HuXj',
                 },
                 detailsSections: [
                     {
@@ -82,6 +89,11 @@ export const sections: Section[] = [
                     label: 'OpenAI developer docs',
                     url: 'https://platform.openai.com/docs/overview',
                 },
+                detailsVideo: {
+                    title: 'Watch: Codex walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/HFM3se4lNiw',
+                    watchUrl: 'https://www.youtube.com/watch?v=HFM3se4lNiw',
+                },
                 detailsSections: [
                     {
                         heading: 'Web app vs desktop app',
@@ -121,6 +133,11 @@ export const sections: Section[] = [
                 detailsGuide: {
                     label: 'Effective prompting with Replit AI',
                     url: 'https://docs.replit.com/tutorials/effective-prompting',
+                },
+                detailsVideo: {
+                    title: 'Watch: Replit walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/IPQxZ42omZY',
+                    watchUrl: 'https://www.youtube.com/watch?v=IPQxZ42omZY',
                 },
                 detailsSections: [
                     {
@@ -162,6 +179,11 @@ export const sections: Section[] = [
                     label: 'Claude for developers',
                     url: 'https://docs.anthropic.com/en/docs/build-with-claude',
                 },
+                detailsVideo: {
+                    title: 'Watch: Claude Code walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/AJpK3YTTKZ4',
+                    watchUrl: 'https://www.youtube.com/watch?v=AJpK3YTTKZ4',
+                },
                 detailsSections: [
                     {
                         heading: 'Prompting effectively',
@@ -201,6 +223,12 @@ export const sections: Section[] = [
                 detailsGuide: {
                     label: 'Lovable quick start',
                     url: 'https://docs.lovable.dev/introduction/getting-started',
+                },
+                detailsVideo: {
+                    title: 'Watch: Lovable walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/a20C3JLKnHE',
+                    watchUrl:
+                        'https://www.youtube.com/watch?v=a20C3JLKnHE&list=PLbVHz4urQBZn5BIXWemOZLw3620LF-VrE&index=1',
                 },
                 detailsSections: [
                     {
