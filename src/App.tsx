@@ -7,6 +7,11 @@ import { Sun, Moon, Linkedin, Github } from 'lucide-react';
 
 const THEME_KEY = 'ai-hackathon-guide-theme';
 type Theme = 'light' | 'dark';
+const VIDEO_EMBED_ORIGINS = [
+    'https://www.youtube.com',
+    'https://i.ytimg.com',
+    'https://s.ytimg.com',
+];
 
 function getInitialTheme(): Theme {
     if (typeof window === 'undefined') return 'dark';
@@ -32,6 +37,24 @@ function App() {
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
     }, [theme]);
+
+    useEffect(() => {
+        for (const href of VIDEO_EMBED_ORIGINS) {
+            if (
+                document.head.querySelector(
+                    `link[rel="preconnect"][href="${href}"]`,
+                )
+            ) {
+                continue;
+            }
+
+            const preconnect = document.createElement('link');
+            preconnect.rel = 'preconnect';
+            preconnect.href = href;
+            preconnect.crossOrigin = 'anonymous';
+            document.head.appendChild(preconnect);
+        }
+    }, []);
 
     const toggleSection = (id: string) => {
         setOpenSectionId((prev) => (prev === id ? null : id));
