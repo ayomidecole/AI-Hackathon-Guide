@@ -122,14 +122,14 @@ export function ChatPanel({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6"
+            className="fixed inset-0 z-50 flex items-end justify-center p-0 md:items-center md:p-6"
             style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
             onClick={onClose}
             role="dialog"
             aria-label="AI chat"
         >
             <div
-                className="flex flex-col w-full max-w-lg max-h-[85vh] rounded-3xl border overflow-hidden shadow-2xl chat-panel-modal"
+                className="flex flex-col w-full h-[100dvh] max-h-[100dvh] md:h-auto md:max-w-lg md:max-h-[85vh] rounded-none md:rounded-3xl border overflow-hidden shadow-2xl chat-panel-modal"
                 style={{
                     borderColor: 'var(--border-muted)',
                     boxShadow: 'var(--shadow-panel)',
@@ -137,7 +137,7 @@ export function ChatPanel({
                 onClick={(e) => e.stopPropagation()}
             >
                 <div
-                    className="flex items-center justify-between gap-3 px-5 py-4 border-b shrink-0 chat-panel-header"
+                    className="flex items-center justify-between gap-3 px-5 py-4 [padding-top:calc(1rem+env(safe-area-inset-top))] md:pt-4 border-b shrink-0 chat-panel-header"
                     style={{
                         borderColor: 'var(--border-subtle)',
                     }}
@@ -193,8 +193,8 @@ export function ChatPanel({
                             className={clsx(
                                 'rounded-2xl px-4 py-3 text-sm chat-panel-message',
                                 m.role === 'user'
-                                    ? 'ml-10 rounded-br-md chat-panel-message-user'
-                                    : 'mr-10 rounded-bl-md chat-panel-message-assistant'
+                                    ? 'ml-10 max-md:ml-4 rounded-br-md chat-panel-message-user'
+                                    : 'mr-10 max-md:mr-4 rounded-bl-md chat-panel-message-assistant'
                             )}
                             style={{
                                 borderColor: 'var(--border-subtle)',
@@ -248,7 +248,7 @@ export function ChatPanel({
                 </div>
 
                 <div
-                    className="px-5 py-4 border-t shrink-0 chat-panel-footer"
+                    className="px-5 py-4 [padding-bottom:calc(1rem+env(safe-area-inset-bottom))] md:py-4 border-t shrink-0 chat-panel-footer"
                     style={{
                         borderColor: 'var(--border-subtle)',
                     }}

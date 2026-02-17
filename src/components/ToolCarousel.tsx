@@ -12,9 +12,13 @@ interface ToolCarouselProps {
 
 const EXIT_DURATION_MS = 180;
 const ENTER_DURATION_MS = 240;
-const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
+const MOBILE_MEDIA_QUERY = '(max-width: 849px)';
 
 export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps) {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+  });
   const [index, setIndex] = useState(0);
   const [cardExpanded, setCardExpanded] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -32,6 +36,41 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   const hasNext = activeIndex < toolCount - 1;
   const isAnimating = animationStage !== 'idle';
   const minSwipeDistance = 48;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY);
+    const applyViewportState = (matches: boolean) => {
+      setIsMobile(matches);
+      setCardExpanded(!matches);
+    };
+
+    applyViewportState(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      applyViewportState(event.matches);
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    setCardExpanded(false);
+  }, [activeIndex, isMobile]);
 
   useEffect(() => {
     if (animationStage !== 'out') return;
@@ -64,13 +103,13 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   useEffect(() => {
     const justOpened = isSectionOpen && !prevSectionOpenRef.current;
     prevSectionOpenRef.current = isSectionOpen;
-    if (justOpened) {
+    if (justOpened && !isMobile) {
       const id = requestAnimationFrame(() => {
         containerRef.current?.focus();
       });
       return () => cancelAnimationFrame(id);
     }
-  }, [isSectionOpen]);
+  }, [isSectionOpen, isMobile]);
 
   if (toolCount === 0) {
     return (
@@ -169,7 +208,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   return (
     <div
       ref={containerRef}
-      className="flex flex-col gap-6 max-md:gap-4 outline-none"
+      className="flex flex-col gap-6 max-md:gap-3 outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       role="region"
@@ -194,23 +233,23 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
           style={{ touchAction: 'pan-y' }}
         >
           <ToolCard
-          tool={current}
-          expanded={cardExpanded}
-          onExpandToggle={setCardExpanded}
-        />
+            tool={current}
+            expanded={cardExpanded}
+            onExpandToggle={setCardExpanded}
+          />
         </div>
-        <div className="flex items-center justify-center gap-2 max-md:gap-3">
+        <div className="flex items-center justify-center gap-2 max-md:justify-between max-md:gap-2">
           <button
             type="button"
             onClick={goPrev}
             disabled={!hasPrev || isAnimating}
-            className="md:hidden shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
+            className="md:hidden shrink-0 w-11 h-11 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
             style={navButtonStyle}
             aria-label="Previous tool"
           >
             <ChevronLeft className="w-5 h-5" strokeWidth={2} />
           </button>
-          <div className="flex items-center gap-1.5 md:hidden">
+          <div className="flex items-center gap-1.5 md:hidden flex-1 justify-center">
             <div className="flex gap-1.5">
               {tools.map((_, i) => (
                 <button
@@ -237,7 +276,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
             type="button"
             onClick={goNext}
             disabled={!hasNext || isAnimating}
-            className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
+            className="shrink-0 w-10 h-10 max-md:w-11 max-md:h-11 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
             style={navButtonStyle}
             aria-label="Next tool"
           >

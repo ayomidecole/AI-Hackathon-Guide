@@ -58,7 +58,7 @@ export function ToolCard({
                         <h3 className="font-display font-semibold text-[var(--text-primary)] leading-tight max-md:text-sm">
                             {tool.name}
                         </h3>
-                        <p className="text-sm text-[var(--text-muted)] mt-0.5 max-md:text-xs max-md:truncate">
+                        <p className="text-sm text-[var(--text-muted)] mt-0.5 max-md:text-xs max-md:leading-snug">
                             {tool.tagline}
                         </p>
                     </div>
@@ -83,8 +83,8 @@ export function ToolCard({
                     'border-t overflow-hidden transition-all duration-300 ease-out',
                     isExpanded
                         ? tool.detailsSections?.length || tool.detailsVideo
-                            ? 'max-h-[80vh]'
-                            : 'max-h-[420px]'
+                            ? 'max-h-[2000px] md:max-h-[80vh]'
+                            : 'max-h-[560px] md:max-h-[420px]'
                         : 'max-h-0',
                 )}
                 style={{
@@ -93,7 +93,7 @@ export function ToolCard({
                 }}
             >
                 <div
-                    className="p-5 pt-4 space-y-4 max-md:p-4 max-md:pt-3 overflow-y-auto max-h-[78vh]"
+                    className="p-5 pt-4 space-y-4 max-md:p-4 max-md:pt-3 overflow-visible max-h-none md:overflow-y-auto md:max-h-[78vh]"
                     style={{ backgroundColor: 'var(--bg-card-hover)' }}
                 >
                     {tool.detailsGuide && (
