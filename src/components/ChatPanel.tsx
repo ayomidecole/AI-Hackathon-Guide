@@ -17,6 +17,8 @@ interface ChatPanelProps {
 }
 
 const API_BASE = '';
+const MIN_TEXTAREA_HEIGHT = 44;
+const MAX_TEXTAREA_HEIGHT = 176;
 
 export function ChatPanel({
     isOpen,
@@ -32,6 +34,20 @@ export function ChatPanel({
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
+    const resizeInput = () => {
+        const textarea = inputRef.current;
+        if (!textarea) return;
+
+        textarea.style.height = 'auto';
+        const nextHeight = Math.min(
+            MAX_TEXTAREA_HEIGHT,
+            Math.max(MIN_TEXTAREA_HEIGHT, textarea.scrollHeight),
+        );
+        textarea.style.height = `${nextHeight}px`;
+        textarea.style.overflowY =
+            textarea.scrollHeight > MAX_TEXTAREA_HEIGHT ? 'auto' : 'hidden';
+    };
+
     useEffect(() => {
         setInput(initialInput);
     }, [initialInput]);
@@ -42,6 +58,10 @@ export function ChatPanel({
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     }, [isOpen, messages]);
+
+    useEffect(() => {
+        resizeInput();
+    }, [input, isOpen]);
 
     const sendMessage = async () => {
         const text = input.trim();
@@ -242,7 +262,8 @@ export function ChatPanel({
                             placeholder="Type your message…"
                             rows={1}
                             disabled={loading}
-                            className="flex-1 min-h-[44px] max-h-32 rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-input"
+                            style={{ height: MIN_TEXTAREA_HEIGHT }}
+                            className="flex-1 min-h-[44px] max-h-[176px] rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] chat-panel-input"
                         />
                         <button
                             type="button"
