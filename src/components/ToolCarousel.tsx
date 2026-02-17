@@ -68,11 +68,6 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   }, []);
 
   useEffect(() => {
-    if (!isMobile) return;
-    setCardExpanded(false);
-  }, [activeIndex, isMobile]);
-
-  useEffect(() => {
     if (animationStage !== 'out') return;
 
     const timer = window.setTimeout(() => {
@@ -126,6 +121,10 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
 
     const clamped = Math.max(0, Math.min(toolCount - 1, nextIndex));
     if (clamped === activeIndex) return;
+
+    if (isMobile) {
+      setCardExpanded(false);
+    }
 
     setSlideDirection(clamped > activeIndex ? 1 : -1);
     setPendingIndex(clamped);
