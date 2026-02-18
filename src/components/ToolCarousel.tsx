@@ -12,9 +12,13 @@ interface ToolCarouselProps {
 
 const EXIT_DURATION_MS = 180;
 const ENTER_DURATION_MS = 240;
-const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
+const MOBILE_MEDIA_QUERY = '(max-width: 849px)';
 
 export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps) {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+  });
   const [index, setIndex] = useState(0);
   const [cardExpanded, setCardExpanded] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -27,11 +31,42 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
   const [animationStage, setAnimationStage] = useState<'idle' | 'out' | 'in'>('idle');
   const toolCount = tools.length;
+  const hasMultipleTools = toolCount > 1;
   const activeIndex = toolCount === 0 ? 0 : Math.min(index, toolCount - 1);
   const hasPrev = activeIndex > 0;
   const hasNext = activeIndex < toolCount - 1;
   const isAnimating = animationStage !== 'idle';
   const minSwipeDistance = 48;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY);
+    const applyViewportState = (matches: boolean) => {
+      setIsMobile(matches);
+      setCardExpanded(!matches);
+    };
+
+    applyViewportState(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      applyViewportState(event.matches);
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (animationStage !== 'out') return;
@@ -64,13 +99,13 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   useEffect(() => {
     const justOpened = isSectionOpen && !prevSectionOpenRef.current;
     prevSectionOpenRef.current = isSectionOpen;
-    if (justOpened) {
+    if (justOpened && !isMobile) {
       const id = requestAnimationFrame(() => {
         containerRef.current?.focus();
       });
       return () => cancelAnimationFrame(id);
     }
-  }, [isSectionOpen]);
+  }, [isSectionOpen, isMobile]);
 
   if (toolCount === 0) {
     return (
@@ -88,6 +123,10 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
     const clamped = Math.max(0, Math.min(toolCount - 1, nextIndex));
     if (clamped === activeIndex) return;
 
+    if (isMobile) {
+      setCardExpanded(false);
+    }
+
     setSlideDirection(clamped > activeIndex ? 1 : -1);
     setPendingIndex(clamped);
     setAnimationStage('out');
@@ -102,6 +141,8 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!hasMultipleTools) return;
+
     const target = event.target as HTMLElement;
     if (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
 
@@ -118,6 +159,8 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   };
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleTools) return;
+
     if (event.touches.length !== 1) {
       swipeStartRef.current = null;
       return;
@@ -128,6 +171,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   };
 
   const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleTools) return;
     if (isAnimating) return;
 
     const start = swipeStartRef.current;
@@ -169,7 +213,7 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
   return (
     <div
       ref={containerRef}
-      className="flex flex-col gap-6 max-md:gap-4 outline-none"
+      className="flex flex-col gap-6 max-md:gap-3 outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       role="region"
@@ -177,16 +221,18 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
     >
       {/* Desktop: Prev | Card | Next. Mobile: Card on top, then Prev + dots + Next */}
       <div className="flex flex-col md:flex-row md:items-center gap-3">
-        <button
-          type="button"
-          onClick={goPrev}
-          disabled={!hasPrev || isAnimating}
-          className="hidden md:flex shrink-0 w-10 h-10 rounded-xl items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none"
-          style={navButtonStyle}
-          aria-label="Previous tool"
-        >
-          <ChevronLeft className="w-5 h-5" strokeWidth={2} />
-        </button>
+        {hasMultipleTools && (
+          <button
+            type="button"
+            onClick={goPrev}
+            disabled={!hasPrev || isAnimating}
+            className="hidden md:flex shrink-0 w-10 h-10 rounded-xl items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none"
+            style={navButtonStyle}
+            aria-label="Previous tool"
+          >
+            <ChevronLeft className="w-5 h-5" strokeWidth={2} />
+          </button>
+        )}
         <div
           className={clsx('flex-1 min-w-0 overflow-hidden max-md:order-first', cardAnimationClass)}
           onTouchStart={handleTouchStart}
@@ -194,60 +240,62 @@ export function ToolCarousel({ tools, isSectionOpen = false }: ToolCarouselProps
           style={{ touchAction: 'pan-y' }}
         >
           <ToolCard
-          tool={current}
-          expanded={cardExpanded}
-          onExpandToggle={setCardExpanded}
-        />
+            tool={current}
+            expanded={cardExpanded}
+            onExpandToggle={setCardExpanded}
+          />
         </div>
-        <div className="flex items-center justify-center gap-2 max-md:gap-3">
-          <button
-            type="button"
-            onClick={goPrev}
-            disabled={!hasPrev || isAnimating}
-            className="md:hidden shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
-            style={navButtonStyle}
-            aria-label="Previous tool"
-          >
-            <ChevronLeft className="w-5 h-5" strokeWidth={2} />
-          </button>
-          <div className="flex items-center gap-1.5 md:hidden">
-            <div className="flex gap-1.5">
-              {tools.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => navigateTo(i)}
-                  disabled={isAnimating}
-                  className={clsx(
-                    'rounded-full transition-all duration-200 touch-manipulation disabled:pointer-events-none',
-                    i === activeIndex ? 'w-2.5 h-2.5' : 'w-2 h-2 opacity-70'
-                  )}
-                  style={{
-                    backgroundColor: i === activeIndex ? 'var(--dot-active)' : 'var(--dot-inactive)',
-                  }}
-                  aria-label={`Go to tool ${i + 1}`}
-                />
-              ))}
+        {hasMultipleTools && (
+          <div className="flex items-center justify-center gap-2 max-md:justify-between max-md:gap-2">
+            <button
+              type="button"
+              onClick={goPrev}
+              disabled={!hasPrev || isAnimating}
+              className="md:hidden shrink-0 w-11 h-11 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none touch-manipulation"
+              style={navButtonStyle}
+              aria-label="Previous tool"
+            >
+              <ChevronLeft className="w-5 h-5" strokeWidth={2} />
+            </button>
+            <div className="flex items-center gap-1.5 md:hidden flex-1 justify-center">
+              <div className="flex gap-1.5">
+                {tools.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => navigateTo(i)}
+                    disabled={isAnimating}
+                    className={clsx(
+                      'rounded-full transition-all duration-200 touch-manipulation disabled:pointer-events-none',
+                      i === activeIndex ? 'w-2.5 h-2.5' : 'w-2 h-2 opacity-70'
+                    )}
+                    style={{
+                      backgroundColor: i === activeIndex ? 'var(--dot-active)' : 'var(--dot-inactive)',
+                    }}
+                    aria-label={`Go to tool ${i + 1}`}
+                  />
+                ))}
+              </div>
+              <span className="text-xs text-[var(--text-muted)] tabular-nums">
+                {activeIndex + 1}/{toolCount}
+              </span>
             </div>
-            <span className="text-xs text-[var(--text-muted)] tabular-nums">
-              {activeIndex + 1}/{toolCount}
-            </span>
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!hasNext || isAnimating}
+              className="shrink-0 w-10 h-10 max-md:w-11 max-md:h-11 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
+              style={navButtonStyle}
+              aria-label="Next tool"
+            >
+              <ChevronRight className="w-5 h-5" strokeWidth={2} />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={goNext}
-            disabled={!hasNext || isAnimating}
-            className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center border transition-colors theme-hover-opacity theme-accent-interaction disabled:opacity-40 disabled:pointer-events-none max-md:touch-manipulation"
-            style={navButtonStyle}
-            aria-label="Next tool"
-          >
-            <ChevronRight className="w-5 h-5" strokeWidth={2} />
-          </button>
-        </div>
+        )}
       </div>
 
       {/* Dots + counter: visible on desktop only (mobile has inline dots above) */}
-      <div className="hidden md:flex items-center justify-center gap-3">
+      <div className={clsx('hidden md:flex items-center justify-center gap-3', !hasMultipleTools && 'md:hidden')}>
         <div className="flex gap-1.5">
           {tools.map((_, i) => (
             <button

@@ -20,6 +20,10 @@ export function SectionPanel({
     children,
 }: SectionPanelProps) {
     const [isHovered, setIsHovered] = useState(false);
+    const canHover =
+        typeof window === 'undefined'
+            ? true
+            : window.matchMedia('(hover: hover)').matches;
     const hasTools = section.tools.length > 0;
     const contributors = section.contributors ?? [];
     const showContributors = !hasTools && contributors.length > 0;
@@ -88,7 +92,7 @@ export function SectionPanel({
                       ? 'var(--section-border-hover, var(--accent-muted))'
                       : 'var(--border-subtle)',
                 boxShadow,
-                transform: isHovered
+                transform: canHover && isHovered
                     ? 'translate3d(0, -0.25rem, 0) scale(1.008)'
                     : undefined,
             }}
