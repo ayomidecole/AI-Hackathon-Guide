@@ -83,7 +83,7 @@ export function ToolCard({
                     'border-t overflow-hidden transition-all duration-300 ease-out',
                     isExpanded
                         ? tool.detailsSections?.length || tool.detailsVideo
-                            ? 'max-h-[2000px] md:max-h-[80vh]'
+                            ? 'max-h-[4000px] md:max-h-[80vh]'
                             : 'max-h-[560px] md:max-h-[420px]'
                         : 'max-h-0',
                 )}
