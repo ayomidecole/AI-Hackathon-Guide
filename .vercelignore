@@ -1,0 +1,2 @@
+# Deploy only the bundled API; source is built during npm run build
+api/chat.ts

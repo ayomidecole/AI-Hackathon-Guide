@@ -10,11 +10,10 @@ export default async function handler(
     return
   }
 
-  const apiKey = process.env.OPENAI_API_KEY
-  if (!apiKey) {
-    console.error('[api/chat] OPENAI_API_KEY is not set in this environment')
-  }
-  const result = await handleChatRequest(apiKey, req.body as ChatRequestBody)
+  const result = await handleChatRequest(
+    process.env.OPENAI_API_KEY,
+    req.body as ChatRequestBody
+  )
 
   res.status(result.status).json(result.json)
 }

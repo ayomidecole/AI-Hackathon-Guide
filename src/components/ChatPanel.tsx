@@ -88,17 +88,10 @@ export function ChatPanel({
                 }),
             });
 
-            let data: { error?: string; choices?: { message?: { content?: string } }[] }
-            try {
-                data = (await res.json()) as typeof data
-            } catch {
-                setError(
-                    res.ok
-                        ? 'Invalid response from server.'
-                        : `Server error (${res.status}). The chat API may be misconfigured.`
-                )
-                return
-            }
+            const data = (await res.json()) as {
+                error?: string;
+                choices?: { message?: { content?: string } }[];
+            };
 
             if (!res.ok) {
                 setError(data.error || 'Failed to get response');

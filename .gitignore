@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+api/chat.js
 .env
 .env.local
 dist-ssr
