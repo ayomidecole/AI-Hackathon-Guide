@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build && npm run build:api",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build:api": "esbuild api/chat.ts --bundle --platform=node --format=esm --outfile=api/chat.js"
+    "build:api": "esbuild server/chat.ts --bundle --platform=node --format=esm --outfile=api/chat.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",
