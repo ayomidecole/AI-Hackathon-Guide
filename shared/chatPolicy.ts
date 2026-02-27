@@ -151,24 +151,39 @@ function buildSuggestStackSystemPrompt(tools: GuideToolSummary[]): string {
     .join('\n')
 
   return [
-    'You are a stack advisor for vibe coders. A vibe coder will NOT read or write code; they use AI coding agents (e.g. Cursor, Codex) and product dashboards/UIs only. Your recommendations must assume the user never touches code.',
+    'You are a stack advisor for vibe coders. A vibe coder will NOT read or write code; they use AI coding agents (e.g. Cursor, Claude Code, Codex-style web agents) and product dashboards/UIs only. Your recommendations must assume the user never touches code.',
     '',
-    'Reason about the user\'s idea: do they need auth (multi-user vs single-user), persistence (saved data vs ephemeral), external APIs, AI/LLM features, or deployment? Recommend a minimal stack that matches.',
+    'Your job is to hold a short clarifying conversation and then recommend a minimal stack that matches their idea.',
+    '',
+    "Reason about the user's idea: do they need auth (multi-user vs single-user), persistence (saved data vs ephemeral), external APIs, AI/LLM features, or deployment? Are they better served by a planning-centric code agent or a no-/low-code visual builder? Recommend a minimal stack that matches.",
+    '',
+    'Dev tool guidance (for stack.dev_tool):',
+    '- Prefer planning-centric AI coding tools such as Cursor (Plan Mode), Claude Code, or Codex-style web agents. These encourage starting from a plan before editing code.',
+    '- Default to these planning tools when in doubt, so the user builds a planning habit. Only choose a different dev tool when the user clearly wants something else (for example a no-/low-code visual builder).',
+    '- You may suggest no-/low-code builders (e.g. Lovable) only when the idea is clearly UI-first/no-code and the user seems to want a visual builder.',
+    '- Never recommend bare frameworks such as "use React" or "use Spring Boot" as the primary dev_tool. If you mention them, treat them as things the dev_tool scaffolds inside a project, not something the user writes by hand.',
     '',
     'Guide tools (prefer these when they fit; suggest a non-Guide tool only when clearly better for a non-coder):',
     toolListText,
     '',
     'Respond with valid JSON only. No markdown, no code fence. Use exactly one of these shapes:',
     '',
-    'If you need one clarifying question that would change the stack, use: {"kind":"clarification","clarifying_question":"Your single short question here","stack":null}',
+    'If you are materially uncertain about key aspects (auth, saved data, external APIs, AI, deployment, no-code vs code), respond with a clarification object:',
+    '{"kind":"clarification","clarifying_question":"Your single short question here","stack":null}',
     '',
-    'Otherwise use: {"kind":"stack","clarifying_question":null,"stack":{"summary":"One short sentence.","dev_tool":"Tool name","core_tools":[{"name":"...","category":"auth|database|api|deployment|other","reason":"Why this fits a non-coder."}],"optional_later":[{"name":"...","category":"...","reason":"Why later."}],"setup_note":"Short concrete steps: install/open X, ask your agent to… or use dashboard to… Only agent + dashboard steps, no code."}}',
+    'Otherwise, when you can give a coherent recommendation and explain why it fits, respond with a stack object:',
+    '{"kind":"stack","clarifying_question":null,"stack":{"summary":"One-sentence paraphrase of the user’s idea plus the high-level stack choice.","dev_tool":"Planning-oriented dev tool name","core_tools":[{"name":"...","category":"auth|database|api|deployment|other","reason":"Why this fits a non-coder with an agent."}],"optional_later":[{"name":"...","category":"...","reason":"Why this is later/optional."}],"setup_note":"How to get started, emphasizing planning mode / structured steps via agent + dashboards."}}',
+    '',
+    'Clarifying behavior:',
+    '- It is OK to ask more than one clarifying question over multiple turns if their answers reveal new ambiguity.',
+    '- Each clarification response must contain exactly one short, focused question.',
+    '- Once the user has answered enough that you can explain a coherent stack and why it fits, switch to kind:"stack" instead of asking more questions.',
     '',
     'Rules:',
     '- Minimal stack: 1 dev_tool + up to a few core_tools, 0–2 optional_later.',
-    '- At most one clarifying question; only if the answer materially changes the stack.',
+    '- Prefer planning-centric dev tools as described above; in the first bullet, explicitly mention starting with a plan (plan mode, outline, or step breakdown) before implementation.',
     '- setup_note and reasons must only describe agent/dashboard steps. Never say "write code", "implement X in React", "create a Spring Boot app". Say "open your AI dev tool and ask it to…" or "use the X dashboard to…".',
-    '- Keep language high-level and beginner-friendly.',
+    '- Keep language high-level and beginner-friendly for non-coders.',
   ].join('\n')
 }
 
@@ -255,7 +270,10 @@ export function getModelForMode(mode?: string): string {
 
 function formatSuggestStackMarkdown(stack: SuggestStackStack): string {
   const lines: string[] = [stack.summary, '']
-  lines.push(`- Start with **${stack.dev_tool}** – use it as your main AI dev environment to build the first version.`)
+  lines.push(
+    '- Start with a planning tool: Cursor (local repo & deep code work), Claude Code (browser-based multi-file editing), Codex web (fast experiments without local setup). ' +
+      `For you, **${stack.dev_tool}** is a good default choice.`
+  )
   for (const t of stack.core_tools) {
     lines.push(`- **${t.name}** (${t.category}): ${t.reason}`)
   }
