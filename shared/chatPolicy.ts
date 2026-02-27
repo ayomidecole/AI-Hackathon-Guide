@@ -264,8 +264,9 @@ export function buildSystemPrompt(opts: {
   return DEFAULT_SYSTEM_PROMPT
 }
 
-export function getModelForMode(mode?: string): string {
-  return mode === 'suggest-stack' ? 'gpt-4o' : 'gpt-4o-mini'
+export function getModelForMode(): string {
+  // Use OpenAI's current flagship chat model for all modes
+  return 'gpt-5.2'
 }
 
 function formatSuggestStackMarkdown(stack: SuggestStackStack): string {

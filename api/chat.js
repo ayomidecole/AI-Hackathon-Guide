@@ -800,7 +800,7 @@ function buildSystemPrompt(opts) {
   return DEFAULT_SYSTEM_PROMPT;
 }
 function getModelForMode(mode) {
-  return mode === "suggest-stack" ? "gpt-4o" : "gpt-4o-mini";
+  return "gpt-5.2";
 }
 function formatSuggestStackMarkdown(stack) {
   const lines = [stack.summary, ""];
