@@ -1,0 +1,8 @@
+# CODEOWNERS
+#
+# This file defines the default reviewers/owners for changes in this repo.
+# Update the GitHub handles below to match your actual team.
+
+# Everything in the repo
+* @github-username-here
+
