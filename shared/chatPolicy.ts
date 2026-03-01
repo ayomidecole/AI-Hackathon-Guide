@@ -412,7 +412,7 @@ export async function handleChatRequest(
   }
 
   const latestUserMessage = getLatestUserMessage(sanitizedMessages)
-  const model = getModelForMode(body.mode)
+  const model = getModelForMode()
 
   if (body.mode === 'suggest-stack') {
     const tools = getSuggestStackToolList()

@@ -799,7 +799,7 @@ function buildSystemPrompt(opts) {
   }
   return DEFAULT_SYSTEM_PROMPT;
 }
-function getModelForMode(mode) {
+function getModelForMode() {
   return "gpt-5.2";
 }
 function formatSuggestStackMarkdown(stack) {
@@ -911,7 +911,7 @@ async function handleChatRequest(apiKey, body) {
     return { status: 400, json: { error: "messages array must contain user/assistant messages" } };
   }
   const latestUserMessage = getLatestUserMessage(sanitizedMessages);
-  const model = getModelForMode(body.mode);
+  const model = getModelForMode();
   if (body.mode === "suggest-stack") {
     const tools = getSuggestStackToolList();
     const systemPrompt2 = buildSuggestStackSystemPrompt(tools);
