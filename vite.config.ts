@@ -9,6 +9,31 @@ export default defineConfig(({ mode }) => {
   Object.assign(process.env, env)
 
   return {
+    test: {
+      pool: 'threads',
+      globals: true,
+      environment: 'happy-dom',
+      include: ['**/*.{test,spec}.{ts,tsx}'],
+      setupFiles: ['src/test/setup.ts'],
+      coverage: {
+        provider: 'v8',
+        include: ['shared/**', 'server/**', 'src/**'],
+        exclude: [
+          '**/*.test.{ts,tsx}',
+          '**/*.spec.{ts,tsx}',
+          '**/sections.ts',
+          'src/main.tsx',
+          'src/test/**',
+          'src/index.css',
+        ],
+        thresholds: {
+          lines: 80,
+          functions: 80,
+          branches: 80,
+          statements: 80,
+        },
+      },
+    },
     plugins: [
       react(),
       {

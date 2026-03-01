@@ -15,8 +15,14 @@ Deployed on Vercel. The frontend is a Vite-built React SPA; the backend is a sin
 - `npm run build:api` — Build only the serverless API function
 - `npm run lint` — ESLint across all .ts/.tsx files
 - `npm run preview` — Preview the production build locally
+- `npm run test` — Run tests in watch mode (Vitest)
+- `npm run test:run` — Run tests once
+- `npm run test:coverage` — Run tests with coverage report
 
-No test framework is configured.
+## Testing
+
+- **When adding code**: Write or extend tests for every new or changed behavior—unit tests for shared/server logic, component tests for UI. Skip tests only when the change is trivial (e.g. copy or config) or when that part of the codebase has no tests and the task is unrelated.
+- **When removing code**: Remove or update the tests that covered the removed behavior so the suite stays accurate and the test run stays green.
 
 ## Architecture
 
