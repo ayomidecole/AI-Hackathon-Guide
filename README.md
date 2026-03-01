@@ -24,6 +24,16 @@ The guide includes an AI assistant that helps you find tools, compare options, a
 
 Set `OPENAI_API_KEY` in your Vercel project: **Project Settings → Environment Variables**.
 
+### Testing
+
+Tests use [Vitest](https://vitest.dev/), [React Testing Library](https://testing-library.com/react), and [happy-dom](https://github.com/capricorn86/happy-dom) as the DOM environment (avoids ESM issues that can occur with jsdom on some setups).
+
+| Command | Description |
+|---------|--------------|
+| `npm run test` | Run tests in watch mode (re-runs on file changes). |
+| `npm run test:run` | Run the full test suite once. Use this before committing. |
+| `npm run test:coverage` | Run tests and generate a coverage report. Aims for at least 80% (thresholds in Vitest config). Open `coverage/index.html` in a browser to view the report. |
+
 ## Contributing
 
 We welcome all kinds of contributions!
