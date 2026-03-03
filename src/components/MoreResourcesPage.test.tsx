@@ -27,8 +27,14 @@ describe('MoreResourcesPage', () => {
         vi.unstubAllGlobals();
     });
 
-    it('renders the initial resource links', () => {
+    it('renders video and article sections with links', () => {
         render(<MoreResourcesPage />);
+        expect(
+            screen.getByRole('heading', { name: /Videos/i, level: 3 }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', { name: /Articles/i, level: 3 }),
+        ).toBeInTheDocument();
         expect(
             screen.getAllByRole('link', { name: /Cursor visual editor/i })
                 .length,
@@ -38,6 +44,13 @@ describe('MoreResourcesPage', () => {
                 name: /Claude agent tips explained/i,
             }).length,
         ).toBeGreaterThan(0);
+        const articleLink = screen.getByRole('link', {
+            name: /How To Be A World-Class Agentic Engineer/i,
+        });
+        expect(articleLink).toHaveAttribute(
+            'href',
+            'https://x.com/systematicls/status/2028814227004395561?s=46',
+        );
     });
 
     it('shows and hides floating preview modal on hover', async () => {
@@ -75,6 +88,34 @@ describe('MoreResourcesPage', () => {
         await waitFor(() => {
             expect(
                 screen.queryByLabelText(/Preview Claude agent tips explained/i),
+            ).not.toBeInTheDocument();
+        });
+    });
+
+    it('shows fallback preview text for article links without embed URLs', async () => {
+        const user = userEvent.setup();
+        render(<MoreResourcesPage />);
+
+        const articleLink = screen.getByRole('link', {
+            name: /How To Be A World-Class Agentic Engineer/i,
+        });
+        await user.hover(articleLink);
+
+        expect(
+            screen.getByLabelText(
+                /Preview How To Be A World-Class Agentic Engineer/i,
+            ),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(/Preview unavailable for this resource\./i),
+        ).toBeInTheDocument();
+
+        await user.unhover(articleLink);
+        await waitFor(() => {
+            expect(
+                screen.queryByLabelText(
+                    /Preview How To Be A World-Class Agentic Engineer/i,
+                ),
             ).not.toBeInTheDocument();
         });
     });
