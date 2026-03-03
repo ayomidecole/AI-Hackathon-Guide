@@ -191,12 +191,6 @@ function App() {
                                 >
                                     Suggest a stack
                                 </button>
-                                <div
-                                    className="mt-4 md:mt-5 pt-4 md:pt-5 border-t"
-                                    style={{
-                                        borderColor: 'var(--border-subtle)',
-                                    }}
-                                />
                                 {view === 'home' && (
                                     <>
                                         <button
