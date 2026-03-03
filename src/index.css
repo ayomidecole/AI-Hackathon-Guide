@@ -226,10 +226,23 @@ body,
   box-shadow: none;
 }
 
+.secondary-link-btn {
+  transform: translateY(0) scale(1);
+}
+
 .secondary-link-btn:hover,
 .secondary-link-btn:active {
   border-color: var(--accent-muted);
   color: var(--accent);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 0 24px rgba(217, 119, 6, 0.03),
+    0 0 48px rgba(217, 119, 6, 0.03);
+}
+
+[data-theme='light'] .secondary-link-btn:hover,
+[data-theme='light'] .secondary-link-btn:active {
+  box-shadow: 0 0 24px rgba(180, 83, 9, 0.03),
+    0 0 48px rgba(180, 83, 9, 0.03);
 }
 
 .more-resources-list-shell {
@@ -348,6 +361,11 @@ body,
   .more-resources-link,
   .secondary-link-btn {
     transition: none;
+  }
+
+  .secondary-link-btn:hover,
+  .secondary-link-btn:active {
+    transform: none;
   }
 }
 

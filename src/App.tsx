@@ -191,12 +191,6 @@ function App() {
                                 >
                                     Suggest a stack
                                 </button>
-                                <div
-                                    className="mt-4 md:mt-5 pt-4 md:pt-5 border-t"
-                                    style={{
-                                        borderColor: 'var(--border-subtle)',
-                                    }}
-                                />
                                 {view === 'home' && (
                                     <>
                                         <button
@@ -204,7 +198,7 @@ function App() {
                                             onClick={() =>
                                                 navigateToView('more-resources')
                                             }
-                                            className="mt-2 w-full rounded-xl py-2 px-4 text-xs font-medium border transition-colors duration-200 ease-out secondary-link-btn cursor-pointer"
+                                            className="mt-2 w-full rounded-xl py-2 px-4 text-xs font-medium border transition-all duration-200 ease-out secondary-link-btn cursor-pointer"
                                             style={{
                                                 backgroundColor: 'var(--bg-card)',
                                                 borderColor: 'var(--border-subtle)',
