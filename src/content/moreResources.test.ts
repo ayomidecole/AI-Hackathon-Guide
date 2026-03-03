@@ -94,10 +94,21 @@ describe('moreResources', () => {
     describe('moreResources array', () => {
         it('exports resources with embedUrl for YouTube links', () => {
             expect(moreResources.length).toBeGreaterThan(0);
-            const withEmbed = moreResources.find((r) => r.embedUrl);
-            expect(withEmbed?.embedUrl).toContain(
+            const videoResource = moreResources.find((r) => r.type === 'video');
+            expect(videoResource?.embedUrl).toContain(
                 'youtube-nocookie.com/embed/',
             );
+        });
+
+        it('includes the article resource without a YouTube embed URL', () => {
+            const articleResource = moreResources.find(
+                (r) => r.type === 'article',
+            );
+            expect(articleResource).toBeDefined();
+            expect(articleResource?.url).toBe(
+                'https://x.com/systematicls/status/2028814227004395561?s=46',
+            );
+            expect(articleResource?.embedUrl).toBeUndefined();
         });
     });
 });

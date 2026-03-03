@@ -64,6 +64,14 @@ export function MoreResourcesPage() {
             ) ?? null,
         [hoveredResourceId],
     );
+    const videoResources = useMemo(
+        () => moreResources.filter((resource) => resource.type === 'video'),
+        [],
+    );
+    const articleResources = useMemo(
+        () => moreResources.filter((resource) => resource.type === 'article'),
+        [],
+    );
     const activeEmbedUrl = hoveredResource?.embedUrl;
     const isPreviewLoading =
         Boolean(activeEmbedUrl) && loadedEmbedUrl !== activeEmbedUrl;
@@ -227,6 +235,58 @@ export function MoreResourcesPage() {
         }, 120);
     }, [clearHidePreviewTimeout]);
 
+    const renderResourceList = (resources: ResourceLink[]) => (
+        <ul className="more-resources-list">
+            {resources.map((resource) => {
+                return (
+                    <li key={resource.id}>
+                        <a
+                            href={resource.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="more-resources-link"
+                            onMouseEnter={(event) => {
+                                const rect =
+                                    event.currentTarget.getBoundingClientRect();
+                                showPreview(
+                                    resource,
+                                    {
+                                        x: event.clientX,
+                                        y: event.clientY,
+                                    },
+                                    rect,
+                                );
+                            }}
+                            onMouseMove={(event) =>
+                                movePreviewAnchor({
+                                    x: event.clientX,
+                                    y: event.clientY,
+                                })
+                            }
+                            onMouseLeave={scheduleHidePreview}
+                            onFocus={(event) => {
+                                const rect =
+                                    event.currentTarget.getBoundingClientRect();
+                                showPreview(
+                                    resource,
+                                    {
+                                        x: rect.right,
+                                        y: rect.top + rect.height / 2,
+                                    },
+                                    rect,
+                                );
+                            }}
+                            onBlur={scheduleHidePreview}
+                            onMouseDown={() => warmPreview(resource)}
+                        >
+                            {resource.label}
+                        </a>
+                    </li>
+                );
+            })}
+        </ul>
+    );
+
     return (
         <section className="space-y-5 md:space-y-7">
             <header className="space-y-3">
@@ -236,56 +296,23 @@ export function MoreResourcesPage() {
             </header>
 
             <div className="more-resources-list-shell">
-                <div className="py-1">
-                    <ul className="more-resources-list">
-                        {moreResources.map((resource) => {
-                            return (
-                                <li key={resource.id}>
-                                    <a
-                                        href={resource.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="more-resources-link"
-                                        onMouseEnter={(event) => {
-                                            const rect =
-                                                event.currentTarget.getBoundingClientRect();
-                                            showPreview(
-                                                resource,
-                                                {
-                                                    x: event.clientX,
-                                                    y: event.clientY,
-                                                },
-                                                rect,
-                                            );
-                                        }}
-                                        onMouseMove={(event) =>
-                                            movePreviewAnchor({
-                                                x: event.clientX,
-                                                y: event.clientY,
-                                            })
-                                        }
-                                        onMouseLeave={scheduleHidePreview}
-                                        onFocus={(event) => {
-                                            const rect =
-                                                event.currentTarget.getBoundingClientRect();
-                                            showPreview(
-                                                resource,
-                                                {
-                                                    x: rect.right,
-                                                    y: rect.top + rect.height / 2,
-                                                },
-                                                rect,
-                                            );
-                                        }}
-                                        onBlur={scheduleHidePreview}
-                                        onMouseDown={() => warmPreview(resource)}
-                                    >
-                                        {resource.label}
-                                    </a>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                <div className="space-y-6 py-1">
+                    {videoResources.length > 0 && (
+                        <section className="space-y-3">
+                            <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                                Videos
+                            </h3>
+                            {renderResourceList(videoResources)}
+                        </section>
+                    )}
+                    {articleResources.length > 0 && (
+                        <section className="space-y-3">
+                            <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                                Articles
+                            </h3>
+                            {renderResourceList(articleResources)}
+                        </section>
+                    )}
                 </div>
 
                 {!isMobile && hoveredResource && (

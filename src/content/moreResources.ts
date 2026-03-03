@@ -1,5 +1,8 @@
+export type ResourceType = 'video' | 'article';
+
 export interface ResourceLink {
     id: string;
+    type: ResourceType;
     label: string;
     url: string;
     embedUrl?: string;
@@ -64,28 +67,39 @@ export function getYouTubeEmbedUrl(url: string): string | undefined {
 const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
     {
         id: 'cursor-visual-editor',
+        type: 'video',
         label: 'Cursor visual editor',
         url: 'https://www.youtube.com/watch?v=XOtHjA8THCw',
     },
     {
         id: 'claude-agent-tips-explained',
+        type: 'video',
         label: 'Claude agent tips explained',
         url: 'https://www.youtube.com/watch?v=fOxC44g8vig&t=53s',
     },
     {
         id: 'rkxotiem5qq',
+        type: 'video',
         label: '10 Tips for Building on Replit',
         url: 'https://www.youtube.com/watch?v=RkXotIEM5QQ',
     },
     {
         id: 'rqvtLxwMklo',
+        type: 'video',
         label: 'Master Lovable In 24 Minutes',
         url: 'https://www.youtube.com/watch?v=rqvtLxwMklo',
     },
     {
         id: 'Be5IAxyxa6g',
+        type: 'video',
         label: 'Beautiful apps in 3 prompts (Cursor 2.0)',
         url: 'https://www.youtube.com/watch?v=Be5IAxyxa6g&t=1346s',
+    },
+    {
+        id: 'systematicls-article',
+        type: 'article',
+        label: 'Systematic LS article (X)',
+        url: 'https://x.com/systematicls/status/2028814227004395561?s=46',
     },
 ];
 
