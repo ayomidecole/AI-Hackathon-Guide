@@ -6,7 +6,6 @@ import {
     useRef,
     useState,
 } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import {
     moreResources,
     type ResourceLink,
@@ -18,10 +17,6 @@ const PRECONNECT_ORIGINS = [
     'https://www.youtube-nocookie.com',
     'https://www.youtube.com',
 ];
-
-interface MoreResourcesPageProps {
-    onBackToGuide?: () => void;
-}
 
 function addHeadLink(
     rel: string,
@@ -45,7 +40,7 @@ function getInitialMobileState(): boolean {
     return window.matchMedia(MOBILE_QUERY).matches;
 }
 
-export function MoreResourcesPage({ onBackToGuide }: MoreResourcesPageProps) {
+export function MoreResourcesPage() {
     const [isMobile, setIsMobile] = useState(getInitialMobileState);
     const [hoveredResourceId, setHoveredResourceId] = useState<string | null>(
         null,
@@ -170,21 +165,6 @@ export function MoreResourcesPage({ onBackToGuide }: MoreResourcesPageProps) {
     return (
         <section className="space-y-5 md:space-y-7">
             <header className="space-y-3">
-                {onBackToGuide && (
-                    <button
-                        type="button"
-                        onClick={onBackToGuide}
-                        className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors theme-hover-opacity theme-accent-interaction"
-                        style={{
-                            backgroundColor: 'var(--bg-card)',
-                            borderColor: 'var(--border-subtle)',
-                            color: 'var(--text-secondary)',
-                        }}
-                    >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        Back to guide
-                    </button>
-                )}
                 <h2 className="font-display text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
                     More resources
                 </h2>

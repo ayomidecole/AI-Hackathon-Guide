@@ -4,7 +4,7 @@ import { ToolCarousel } from './components/ToolCarousel';
 import { ChatPanel } from './components/ChatPanel';
 import { MoreResourcesPage } from './components/MoreResourcesPage';
 import { sections } from './content/sections';
-import { Sun, Moon, Linkedin, Github } from 'lucide-react';
+import { Sun, Moon, Linkedin, Github, ArrowLeft } from 'lucide-react';
 
 const THEME_KEY = 'ai-hackathon-guide-theme';
 const MORE_RESOURCES_PATH = '/more-resources';
@@ -115,9 +115,19 @@ function App() {
                     <aside className="w-[min(360px,max(260px,30vw))] shrink-0 flex flex-col p-4 md:p-6 max-md:w-full max-md:p-4">
                         <div className="flex-1 flex flex-col min-w-0 max-md:min-h-0">
                             <div className="flex items-center justify-between gap-2 mb-4 md:mb-6">
-                                <span className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-widest">
+                                <button
+                                    type="button"
+                                    onClick={() => navigateToView('home')}
+                                    className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors theme-hover-opacity theme-accent-interaction"
+                                    style={{
+                                        backgroundColor: 'var(--bg-card)',
+                                        borderColor: 'var(--border-subtle)',
+                                        color: 'var(--text-secondary)',
+                                    }}
+                                >
+                                    <ArrowLeft className="w-3.5 h-3.5" />
                                     Guide
-                                </span>
+                                </button>
                                 <button
                                     type="button"
                                     onClick={toggleTheme}
@@ -307,11 +317,7 @@ function App() {
                                     </div>
                                 </>
                             ) : (
-                                <MoreResourcesPage
-                                    onBackToGuide={() =>
-                                        navigateToView('home')
-                                    }
-                                />
+                                <MoreResourcesPage />
                             )}
                         </div>
                     </main>
