@@ -67,3 +67,10 @@ Configured for Vercel via `vercel.json`. The build produces:
 - `api/chat.js` — serverless function (esbuild from `server/chat.ts`)
 
 Rewrites route `/api/*` to serverless functions and everything else to `index.html` for client-side routing.
+
+## Cursor Cloud specific instructions
+
+- **Single-process dev setup**: `npm run dev` starts the Vite dev server on port 5173, which also serves the `/api/chat` endpoint via middleware — no separate backend process is needed.
+- **Chat feature requires `OPENAI_API_KEY`**: Without it the chat returns a 500, but the entire tool-browsing UI works fine. Tests do not require the key (they mock fetch).
+- **Tests run offline**: `npm run test:run` uses happy-dom and mocked fetch; no dev server or API key needed. The happy-dom environment may log `DOMException [NetworkError]` for embedded YouTube iframes — these are harmless and do not affect test results.
+- **Use `--host 0.0.0.0`** when starting the dev server in cloud environments to make it accessible: `npm run dev -- --host 0.0.0.0`.
