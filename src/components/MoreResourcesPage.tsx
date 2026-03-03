@@ -49,6 +49,12 @@ export function MoreResourcesPage() {
         x: number;
         y: number;
     } | null>(null);
+    const [previewLinkRect, setPreviewLinkRect] = useState<{
+        left: number;
+        right: number;
+        top: number;
+        bottom: number;
+    } | null>(null);
     const [loadedEmbedUrl, setLoadedEmbedUrl] = useState<string | null>(null);
     const hidePreviewTimeoutRef = useRef<number | null>(null);
     const hoveredResource = useMemo(
@@ -62,39 +68,84 @@ export function MoreResourcesPage() {
     const isPreviewLoading =
         Boolean(activeEmbedUrl) && loadedEmbedUrl !== activeEmbedUrl;
     const floatingModalStyle = useMemo<CSSProperties | undefined>(() => {
-        if (typeof window === 'undefined' || isMobile || !previewAnchor) {
+        if (typeof window === 'undefined' || isMobile) {
+            return undefined;
+        }
+        const hasLinkRect = previewLinkRect != null;
+        const hasAnchor = previewAnchor != null;
+        if (!hasLinkRect && !hasAnchor) {
             return undefined;
         }
 
         const margin = 16;
-        const offset = 18;
+        const gapFromLink = 16;
         const width = Math.max(
             360,
             Math.min(520, Math.round(window.innerWidth * 0.34)),
         );
         const estimatedHeight = Math.round(width * (9 / 16) + 82);
 
-        const left = Math.max(
-            margin,
-            Math.min(
-                window.innerWidth - width - margin,
-                previewAnchor.x + offset,
-            ),
-        );
-        const top = Math.max(
-            margin,
-            Math.min(
-                window.innerHeight - estimatedHeight - margin,
-                previewAnchor.y - Math.round(estimatedHeight * 0.24),
-            ),
-        );
+        let left: number;
+        let top: number;
+
+        if (hasLinkRect) {
+            left = previewLinkRect.right + gapFromLink;
+            top =
+                previewLinkRect.top +
+                (previewLinkRect.bottom - previewLinkRect.top) / 2 -
+                estimatedHeight / 2;
+            left = Math.max(
+                margin,
+                Math.min(window.innerWidth - width - margin, left),
+            );
+            top = Math.max(
+                margin,
+                Math.min(window.innerHeight - estimatedHeight - margin, top),
+            );
+            const modalRight = left + width;
+            const modalBottom = top + estimatedHeight;
+            const overlapsLink =
+                left < previewLinkRect.right &&
+                modalRight > previewLinkRect.left &&
+                top < previewLinkRect.bottom &&
+                modalBottom > previewLinkRect.top;
+            if (overlapsLink) {
+                const aboveTop =
+                    previewLinkRect.top - estimatedHeight - gapFromLink;
+                if (aboveTop >= margin) {
+                    top = aboveTop;
+                } else {
+                    top = Math.min(
+                        previewLinkRect.bottom + gapFromLink,
+                        window.innerHeight - estimatedHeight - margin,
+                    );
+                }
+            }
+        } else if (hasAnchor) {
+            left = Math.max(
+                margin,
+                Math.min(
+                    window.innerWidth - width - margin,
+                    previewAnchor.x + 32,
+                ),
+            );
+            top = Math.max(
+                margin,
+                Math.min(
+                    window.innerHeight - estimatedHeight - margin,
+                    previewAnchor.y - Math.round(estimatedHeight * 0.24),
+                ),
+            );
+        } else {
+            return undefined;
+        }
 
         return {
             left: `${left}px`,
             top: `${top}px`,
             width: `${width}px`,
         };
-    }, [isMobile, previewAnchor]);
+    }, [isMobile, previewAnchor, previewLinkRect]);
 
     useEffect(() => {
         if (typeof document === 'undefined') return;
@@ -138,12 +189,24 @@ export function MoreResourcesPage() {
     }, []);
 
     const showPreview = useCallback(
-        (resource: ResourceLink, anchor?: { x: number; y: number }) => {
+        (
+            resource: ResourceLink,
+            anchor?: { x: number; y: number },
+            linkRect?: DOMRect,
+        ) => {
             clearHidePreviewTimeout();
             warmPreview(resource);
             setHoveredResourceId(resource.id);
             if (anchor) {
                 setPreviewAnchor(anchor);
+            }
+            if (linkRect) {
+                setPreviewLinkRect({
+                    left: linkRect.left,
+                    right: linkRect.right,
+                    top: linkRect.top,
+                    bottom: linkRect.bottom,
+                });
             }
         },
         [clearHidePreviewTimeout, warmPreview],
@@ -158,6 +221,7 @@ export function MoreResourcesPage() {
         hidePreviewTimeoutRef.current = window.setTimeout(() => {
             setHoveredResourceId(null);
             setPreviewAnchor(null);
+            setPreviewLinkRect(null);
             hidePreviewTimeoutRef.current = null;
         }, 120);
     }, [clearHidePreviewTimeout]);
@@ -188,12 +252,18 @@ export function MoreResourcesPage() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="more-resources-link"
-                                        onMouseEnter={(event) =>
-                                            showPreview(resource, {
-                                                x: event.clientX,
-                                                y: event.clientY,
-                                            })
-                                        }
+                                        onMouseEnter={(event) => {
+                                            const rect =
+                                                event.currentTarget.getBoundingClientRect();
+                                            showPreview(
+                                                resource,
+                                                {
+                                                    x: event.clientX,
+                                                    y: event.clientY,
+                                                },
+                                                rect,
+                                            );
+                                        }}
                                         onMouseMove={(event) =>
                                             movePreviewAnchor({
                                                 x: event.clientX,
@@ -204,10 +274,14 @@ export function MoreResourcesPage() {
                                         onFocus={(event) => {
                                             const rect =
                                                 event.currentTarget.getBoundingClientRect();
-                                            showPreview(resource, {
-                                                x: rect.right,
-                                                y: rect.top + rect.height / 2,
-                                            });
+                                            showPreview(
+                                                resource,
+                                                {
+                                                    x: rect.right,
+                                                    y: rect.top + rect.height / 2,
+                                                },
+                                                rect,
+                                            );
                                         }}
                                         onBlur={scheduleHidePreview}
                                         onMouseDown={() => warmPreview(resource)}
