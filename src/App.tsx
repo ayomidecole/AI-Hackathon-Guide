@@ -164,86 +164,84 @@ function App() {
                                     )}
                                 </button>
                             </div>
-                            <h1 className="font-display text-xl md:text-3xl font-bold tracking-tight text-[var(--text-primary)] leading-tight min-w-0 break-words">
-                                AI Hackathon Guide
-                            </h1>
-                            <p className="mt-2 md:mt-3 text-sm text-[var(--text-secondary)] leading-relaxed">
-                                A curated list of tools and resources to help
-                                you build AI applications faster.
-                            </p>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setChatOptions({
-                                        initialInput:
-                                            "I'm building — suggest a stack",
-                                        mode: 'suggest-stack',
-                                    });
-                                    setChatOpen(true);
-                                }}
-                                className="mt-4 w-full rounded-xl py-2.5 px-4 text-sm font-medium border transition-all duration-200 ease-out suggest-stack-btn"
-                                style={{
-                                    backgroundColor: 'var(--accent-soft)',
-                                    borderColor: 'var(--accent-muted)',
-                                    color: 'var(--accent)',
-                                }}
-                            >
-                                Suggest a stack
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    navigateToView('more-resources')
-                                }
-                                className="mt-2 w-full rounded-xl py-2 px-4 text-xs font-medium border transition-colors duration-200 ease-out secondary-link-btn cursor-pointer"
-                                style={{
-                                    backgroundColor:
-                                        view === 'more-resources'
-                                            ? 'var(--accent-soft)'
-                                            : 'var(--bg-card)',
-                                    borderColor:
-                                        view === 'more-resources'
-                                            ? 'var(--accent-muted)'
-                                            : 'var(--border-subtle)',
-                                    color:
-                                        view === 'more-resources'
-                                            ? 'var(--accent)'
-                                            : 'var(--text-secondary)',
-                                }}
-                            >
-                                Other resources
-                            </button>
-                            <div
-                                className="mt-4 md:mt-5 pt-4 md:pt-5 border-t max-md:hidden"
-                                style={{ borderColor: 'var(--border-subtle)' }}
-                            >
-                                <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-2">
-                                    Contributors
-                                </p>
-                                <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-semibold flex items-center gap-2 flex-wrap">
-                                    Created by Ayomide Aremu-Cole
-                                    <span className="inline-flex items-center gap-1.5">
-                                        <a
-                                            href="https://www.linkedin.com/in/ayomidecole98/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                                            aria-label="Ayomide Aremu-Cole on LinkedIn"
-                                        >
-                                            <Linkedin className="w-4 h-4" />
-                                        </a>
-                                        <a
-                                            href="https://github.com/ayomidecole"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                                            aria-label="Ayomide Aremu-Cole on GitHub"
-                                        >
-                                            <Github className="w-4 h-4" />
-                                        </a>
-                                    </span>
-                                </p>
-                            </div>
+                            {view === 'home' && (
+                                <>
+                                    <h1 className="font-display text-xl md:text-3xl font-bold tracking-tight text-[var(--text-primary)] leading-tight min-w-0 break-words">
+                                        AI Hackathon Guide
+                                    </h1>
+                                    <p className="mt-2 md:mt-3 text-sm text-[var(--text-secondary)] leading-relaxed">
+                                        A curated list of tools and resources
+                                        to help you build AI applications
+                                        faster.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setChatOptions({
+                                                initialInput:
+                                                    "I'm building — suggest a stack",
+                                                mode: 'suggest-stack',
+                                            });
+                                            setChatOpen(true);
+                                        }}
+                                        className="mt-4 w-full rounded-xl py-2.5 px-4 text-sm font-medium border transition-all duration-200 ease-out suggest-stack-btn cursor-pointer"
+                                        style={{
+                                            backgroundColor: 'var(--accent-soft)',
+                                            borderColor: 'var(--accent-muted)',
+                                            color: 'var(--accent)',
+                                        }}
+                                    >
+                                        Suggest a stack
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            navigateToView('more-resources')
+                                        }
+                                        className="mt-2 w-full rounded-xl py-2 px-4 text-xs font-medium border transition-colors duration-200 ease-out secondary-link-btn cursor-pointer"
+                                        style={{
+                                            backgroundColor: 'var(--bg-card)',
+                                            borderColor: 'var(--border-subtle)',
+                                            color: 'var(--text-secondary)',
+                                        }}
+                                    >
+                                        Other resources
+                                    </button>
+                                    <div
+                                        className="mt-4 md:mt-5 pt-4 md:pt-5 border-t max-md:hidden"
+                                        style={{
+                                            borderColor: 'var(--border-subtle)',
+                                        }}
+                                    >
+                                        <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                                            Contributors
+                                        </p>
+                                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-semibold flex items-center gap-2 flex-wrap">
+                                            Created by Ayomide Aremu-Cole
+                                            <span className="inline-flex items-center gap-1.5">
+                                                <a
+                                                    href="https://www.linkedin.com/in/ayomidecole98/"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                                                    aria-label="Ayomide Aremu-Cole on LinkedIn"
+                                                >
+                                                    <Linkedin className="w-4 h-4" />
+                                                </a>
+                                                <a
+                                                    href="https://github.com/ayomidecole"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="p-1 rounded transition-colors hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                                                    aria-label="Ayomide Aremu-Cole on GitHub"
+                                                >
+                                                    <Github className="w-4 h-4" />
+                                                </a>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </aside>
 
