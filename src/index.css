@@ -221,10 +221,127 @@ body,
     0 0 48px rgba(180, 83, 9, 0.03);
 }
 
+.secondary-link-btn {
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none;
+}
+
+.secondary-link-btn:hover,
+.secondary-link-btn:active {
+  border-color: var(--accent-muted);
+  color: var(--accent);
+}
+
+.more-resources-list-shell {
+  position: relative;
+  max-width: 680px;
+}
+
+.more-resources-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.more-resources-link {
+  color: var(--text-primary);
+  font-size: 1.02rem;
+  line-height: 1.35;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  transition: color 0.18s ease;
+}
+
+.more-resources-link:hover {
+  color: var(--accent);
+}
+
+.more-resources-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.resource-hover-floating {
+  position: fixed;
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  background-color: var(--bg-card);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+  z-index: 40;
+  backdrop-filter: blur(6px);
+}
+
+.resource-hover-floating-header {
+  padding: 0.75rem 0.9rem;
+}
+
+.resource-hover-floating-frame {
+  position: relative;
+  border-top: 1px solid var(--border-subtle);
+  aspect-ratio: 16 / 9;
+  background-color: var(--bg-panel);
+}
+
+.resource-preview-loading {
+  background:
+    linear-gradient(
+      110deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 40%,
+      transparent 80%
+    ),
+    var(--bg-card);
+  background-size: 260% 100%;
+  animation: resource-loading-sheen 1.2s ease-in-out infinite;
+}
+
+.resource-preview-empty {
+  background-color: var(--bg-panel);
+}
+
+.resource-preview-iframe {
+  opacity: 0.08;
+  transition: opacity 0.2s ease;
+}
+
+.resource-preview-iframe.is-loaded {
+  opacity: 1;
+}
+
+@keyframes resource-loading-sheen {
+  0% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -70% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .suggest-stack-btn:hover,
   .suggest-stack-btn:active {
     transform: none;
+  }
+
+  .resource-preview-loading {
+    animation: none;
+  }
+
+  .resource-preview-iframe,
+  .more-resources-link,
+  .secondary-link-btn {
+    transition: none;
+  }
+}
+
+@media (max-width: 849px) {
+  .resource-hover-floating {
+    display: none;
   }
 }
 
