@@ -72,6 +72,21 @@ const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
         label: 'Claude agent tips explained',
         url: 'https://www.youtube.com/watch?v=fOxC44g8vig&t=53s',
     },
+    {
+        id: 'rkxotiem5qq',
+        label: '10 Tips for Building on Replit',
+        url: 'https://www.youtube.com/watch?v=RkXotIEM5QQ',
+    },
+    {
+        id: 'rqvtLxwMklo',
+        label: 'Master Lovable In 24 Minutes',
+        url: 'https://www.youtube.com/watch?v=rqvtLxwMklo',
+    },
+    {
+        id: 'Be5IAxyxa6g',
+        label: 'Beautiful apps in 3 prompts (Cursor 2.0)',
+        url: 'https://www.youtube.com/watch?v=Be5IAxyxa6g&t=1346s',
+    },
 ];
 
 export const moreResources: ResourceLink[] = baseResourceLinks.map(
