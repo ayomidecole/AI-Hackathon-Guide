@@ -232,17 +232,10 @@ export function MoreResourcesPage() {
                 <h2 className="font-display text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
                     More resources
                 </h2>
-                <p className="text-sm md:text-base text-[var(--text-secondary)] max-w-2xl leading-relaxed">
-                    A simple list of links. Hover any link to preview on the
-                    right.
-                </p>
             </header>
 
             <div className="more-resources-list-shell">
                 <div className="py-1">
-                    <p className="text-xs uppercase tracking-wider font-medium text-[var(--text-muted)] mb-3">
-                        Resource library
-                    </p>
                     <ul className="more-resources-list">
                         {moreResources.map((resource) => {
                             return (

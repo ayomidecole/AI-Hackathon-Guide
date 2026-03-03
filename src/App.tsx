@@ -115,19 +115,33 @@ function App() {
                     <aside className="w-[min(360px,max(260px,30vw))] shrink-0 flex flex-col p-4 md:p-6 max-md:w-full max-md:p-4">
                         <div className="flex-1 flex flex-col min-w-0 max-md:min-h-0">
                             <div className="flex items-center justify-between gap-2 mb-4 md:mb-6">
-                                <button
-                                    type="button"
-                                    onClick={() => navigateToView('home')}
-                                    className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors theme-hover-opacity theme-accent-interaction"
-                                    style={{
-                                        backgroundColor: 'var(--bg-card)',
-                                        borderColor: 'var(--border-subtle)',
-                                        color: 'var(--text-secondary)',
-                                    }}
-                                >
-                                    <ArrowLeft className="w-3.5 h-3.5" />
-                                    Guide
-                                </button>
+                                {view === 'home' ? (
+                                    <span
+                                        className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium"
+                                        style={{
+                                            backgroundColor: 'var(--bg-card)',
+                                            borderColor: 'var(--border-subtle)',
+                                            color: 'var(--text-secondary)',
+                                        }}
+                                    >
+                                        Guide
+                                    </span>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => navigateToView('home')}
+                                        className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors theme-hover-opacity theme-accent-interaction cursor-pointer"
+                                        style={{
+                                            backgroundColor: 'var(--bg-card)',
+                                            borderColor: 'var(--border-subtle)',
+                                            color: 'var(--text-secondary)',
+                                        }}
+                                        aria-label="Back to guide"
+                                    >
+                                        <ArrowLeft className="w-3.5 h-3.5" />
+                                        Guide
+                                    </button>
+                                )}
                                 <button
                                     type="button"
                                     onClick={toggleTheme}
@@ -181,7 +195,7 @@ function App() {
                                 onClick={() =>
                                     navigateToView('more-resources')
                                 }
-                                className="mt-2 w-full rounded-xl py-2 px-4 text-xs font-medium border transition-colors duration-200 ease-out secondary-link-btn"
+                                className="mt-2 w-full rounded-xl py-2 px-4 text-xs font-medium border transition-colors duration-200 ease-out secondary-link-btn cursor-pointer"
                                 style={{
                                     backgroundColor:
                                         view === 'more-resources'
