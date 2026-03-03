@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { act } from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
@@ -16,6 +17,7 @@ const mockLocalStorage = {
 
 describe('App', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/')
     vi.stubGlobal('matchMedia', vi.fn().mockImplementation((query: string) => ({
       matches: query === '(prefers-color-scheme: light)' ? false : false,
       addListener: vi.fn(),
@@ -29,10 +31,11 @@ describe('App', () => {
     vi.stubGlobal('localStorage', mockLocalStorage)
   })
 
-  it('renders title and suggest stack button', () => {
+  it('renders title and sidebar actions', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: /AI Hackathon Guide/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Suggest a stack/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Other resources/i })).toBeInTheDocument()
   })
 
   it('toggles theme and updates data-theme', async () => {
@@ -72,5 +75,34 @@ describe('App', () => {
     render(<App />)
     expect(screen.getByRole('button', { name: /Switch to dark mode/i })).toBeInTheDocument()
     expect(document.documentElement.getAttribute('data-theme')).toBe('light')
+  })
+
+  it('navigates to More resources page and updates pathname', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /Other resources/i }))
+    expect(screen.getByRole('heading', { name: /More resources/i })).toBeInTheDocument()
+    expect(window.location.pathname).toBe('/more-resources')
+  })
+
+  it('handles popstate and returns to home view', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /Other resources/i }))
+    expect(screen.getByRole('heading', { name: /More resources/i })).toBeInTheDocument()
+
+    act(() => {
+      window.history.pushState({}, '', '/')
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    })
+
+    expect(screen.getByRole('heading', { name: /AI Hackathon Guide/i })).toBeInTheDocument()
+    expect(window.location.pathname).toBe('/')
+  })
+
+  it('loads More resources view from pathname', () => {
+    window.history.pushState({}, '', '/more-resources')
+    render(<App />)
+    expect(screen.getByRole('heading', { name: /More resources/i })).toBeInTheDocument()
   })
 })
