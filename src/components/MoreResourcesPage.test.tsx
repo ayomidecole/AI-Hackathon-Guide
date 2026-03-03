@@ -142,4 +142,22 @@ describe('MoreResourcesPage', () => {
         expect(openLink).toHaveAttribute('target', '_blank');
         expect(openLink).toHaveAttribute('rel', 'noopener noreferrer');
     });
+
+    it('shows preview on link focus and hides on blur', async () => {
+        render(<MoreResourcesPage />);
+        const link = screen.getByRole('link', {
+            name: /Claude agent tips explained/i,
+        });
+        fireEvent.focus(link);
+        expect(
+            screen.getByLabelText(/Preview Claude agent tips explained/i),
+        ).toBeInTheDocument();
+        fireEvent.blur(link);
+        await waitFor(() => {
+            expect(
+                screen.queryByLabelText(/Preview Claude agent tips explained/i),
+            ).not.toBeInTheDocument();
+        });
+    });
+
 });

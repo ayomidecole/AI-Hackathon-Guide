@@ -123,4 +123,46 @@ describe('ToolCarousel', () => {
     })
     expect(screen.getByRole('button', { name: /More details/i })).toBeInTheDocument()
   })
+
+  it('navigates to tool when dot is clicked', () => {
+    render(<ToolCarousel tools={mockTools} isSectionOpen={true} />)
+    expect(screen.getByText('Tool One')).toBeInTheDocument()
+    const dots = screen.getAllByRole('button', { name: /Go to tool 2/i })
+    act(() => {
+      fireEvent.click(dots[0])
+    })
+    act(() => {
+      vi.advanceTimersByTime(EXIT_MS)
+    })
+    act(() => {
+      vi.advanceTimersByTime(ENTER_MS)
+    })
+    expect(screen.getByText('Tool Two')).toBeInTheDocument()
+  })
+
+  it('navigates to previous tool when prev button clicked', () => {
+    render(<ToolCarousel tools={mockTools} isSectionOpen={true} />)
+    const nextButtons = screen.getAllByRole('button', { name: /Next tool/i })
+    act(() => {
+      fireEvent.click(nextButtons[0])
+    })
+    act(() => {
+      vi.advanceTimersByTime(EXIT_MS)
+    })
+    act(() => {
+      vi.advanceTimersByTime(ENTER_MS)
+    })
+    expect(screen.getByText('Tool Two')).toBeInTheDocument()
+    const prevButtons = screen.getAllByRole('button', { name: /Previous tool/i })
+    act(() => {
+      fireEvent.click(prevButtons[0])
+    })
+    act(() => {
+      vi.advanceTimersByTime(EXIT_MS)
+    })
+    act(() => {
+      vi.advanceTimersByTime(ENTER_MS)
+    })
+    expect(screen.getByText('Tool One')).toBeInTheDocument()
+  })
 })

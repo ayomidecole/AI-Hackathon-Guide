@@ -105,4 +105,18 @@ describe('App', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: /More resources/i })).toBeInTheDocument()
   })
+
+  it('navigates back to home when Guide (back) button is clicked on More resources page', async () => {
+    const user = userEvent.setup()
+    window.history.pushState({}, '', '/more-resources')
+    render(<App />)
+    expect(screen.getByRole('heading', { name: /More resources/i })).toBeInTheDocument()
+
+    const backButton = screen.getByRole('button', { name: /Back to guide/i })
+    await user.click(backButton)
+
+    expect(screen.getByRole('heading', { name: /AI Hackathon Guide/i })).toBeInTheDocument()
+    expect(window.location.pathname).toBe('/')
+  })
+
 })
