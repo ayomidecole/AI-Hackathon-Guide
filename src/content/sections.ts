@@ -136,8 +136,8 @@ export const sections: Section[] = [
                 },
                 detailsVideo: {
                     title: 'Watch: Replit walkthrough',
-                    embedUrl: 'https://www.youtube.com/embed/IPQxZ42omZY',
-                    watchUrl: 'https://www.youtube.com/watch?v=IPQxZ42omZY',
+                    embedUrl: 'https://www.youtube.com/embed/TAXRZyGV1Dw?start=42',
+                    watchUrl: 'https://www.youtube.com/watch?v=TAXRZyGV1Dw&t=42s',
                 },
                 detailsSections: [
                     {
@@ -226,9 +226,8 @@ export const sections: Section[] = [
                 },
                 detailsVideo: {
                     title: 'Watch: Lovable walkthrough',
-                    embedUrl: 'https://www.youtube.com/embed/a20C3JLKnHE',
-                    watchUrl:
-                        'https://www.youtube.com/watch?v=a20C3JLKnHE&list=PLbVHz4urQBZn5BIXWemOZLw3620LF-VrE&index=1',
+                    embedUrl: 'https://www.youtube.com/embed/lf49bgdthVg',
+                    watchUrl: 'https://www.youtube.com/watch?v=lf49bgdthVg',
                 },
                 detailsSections: [
                     {
