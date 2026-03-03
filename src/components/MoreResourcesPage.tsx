@@ -222,6 +222,7 @@ export function MoreResourcesPage() {
             setHoveredResourceId(null);
             setPreviewAnchor(null);
             setPreviewLinkRect(null);
+            setLoadedEmbedUrl(null);
             hidePreviewTimeoutRef.current = null;
         }, 120);
     }, [clearHidePreviewTimeout]);
