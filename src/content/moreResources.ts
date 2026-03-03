@@ -98,7 +98,7 @@ const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
     {
         id: 'systematicls-article',
         type: 'article',
-        label: 'Systematic LS article (X)',
+        label: 'How To Be A World-Class Agentic Engineer',
         url: 'https://x.com/systematicls/status/2028814227004395561?s=46',
     },
 ];

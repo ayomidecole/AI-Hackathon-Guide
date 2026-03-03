@@ -105,6 +105,9 @@ describe('moreResources', () => {
                 (r) => r.type === 'article',
             );
             expect(articleResource).toBeDefined();
+            expect(articleResource?.label).toBe(
+                'How To Be A World-Class Agentic Engineer',
+            );
             expect(articleResource?.url).toBe(
                 'https://x.com/systematicls/status/2028814227004395561?s=46',
             );

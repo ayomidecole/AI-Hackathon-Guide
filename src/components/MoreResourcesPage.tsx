@@ -299,7 +299,7 @@ export function MoreResourcesPage() {
                 <div className="space-y-6 py-1">
                     {videoResources.length > 0 && (
                         <section className="space-y-3">
-                            <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
                                 Videos
                             </h3>
                             {renderResourceList(videoResources)}
@@ -307,7 +307,7 @@ export function MoreResourcesPage() {
                     )}
                     {articleResources.length > 0 && (
                         <section className="space-y-3">
-                            <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
                                 Articles
                             </h3>
                             {renderResourceList(articleResources)}

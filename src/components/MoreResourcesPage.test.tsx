@@ -45,7 +45,7 @@ describe('MoreResourcesPage', () => {
             }).length,
         ).toBeGreaterThan(0);
         const articleLink = screen.getByRole('link', {
-            name: /Systematic LS article \(X\)/i,
+            name: /How To Be A World-Class Agentic Engineer/i,
         });
         expect(articleLink).toHaveAttribute(
             'href',
@@ -97,12 +97,14 @@ describe('MoreResourcesPage', () => {
         render(<MoreResourcesPage />);
 
         const articleLink = screen.getByRole('link', {
-            name: /Systematic LS article \(X\)/i,
+            name: /How To Be A World-Class Agentic Engineer/i,
         });
         await user.hover(articleLink);
 
         expect(
-            screen.getByLabelText(/Preview Systematic LS article \(X\)/i),
+            screen.getByLabelText(
+                /Preview How To Be A World-Class Agentic Engineer/i,
+            ),
         ).toBeInTheDocument();
         expect(
             screen.getByText(/Preview unavailable for this resource\./i),
@@ -111,7 +113,9 @@ describe('MoreResourcesPage', () => {
         await user.unhover(articleLink);
         await waitFor(() => {
             expect(
-                screen.queryByLabelText(/Preview Systematic LS article \(X\)/i),
+                screen.queryByLabelText(
+                    /Preview How To Be A World-Class Agentic Engineer/i,
+                ),
             ).not.toBeInTheDocument();
         });
     });
