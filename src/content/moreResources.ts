@@ -102,6 +102,12 @@ const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
         url: 'https://agentskills.io/home',
     },
     {
+        id: 'replit-design-vs-app-mode',
+        type: 'docs',
+        label: 'Replit Design vs. App Mode',
+        url: 'https://docs.replit.com/tutorials/design-vs-build-mode#design-vs-app-mode',
+    },
+    {
         id: 'cursor-third-era',
         type: 'article',
         label: 'The third era of AI software development',
