@@ -1,4 +1,4 @@
-export type ResourceType = 'video' | 'article';
+export type ResourceType = 'video' | 'article' | 'docs';
 
 export interface ResourceLink {
     id: string;
@@ -94,6 +94,18 @@ const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
         type: 'video',
         label: 'Beautiful apps in 3 prompts (Cursor 2.0)',
         url: 'https://www.youtube.com/watch?v=Be5IAxyxa6g&t=1346s',
+    },
+    {
+        id: 'agentskills-home',
+        type: 'docs',
+        label: 'Agent Skills — Overview',
+        url: 'https://agentskills.io/home',
+    },
+    {
+        id: 'cursor-third-era',
+        type: 'article',
+        label: 'The third era of AI software development',
+        url: 'https://cursor.com/blog/third-era',
     },
     {
         id: 'systematicls-article',

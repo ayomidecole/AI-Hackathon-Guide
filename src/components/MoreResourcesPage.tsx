@@ -69,13 +69,22 @@ export function MoreResourcesPage() {
         () => moreResources.filter((resource) => resource.type === 'video'),
         [],
     );
+    const docResources = useMemo(
+        () => moreResources.filter((resource) => resource.type === 'docs'),
+        [],
+    );
     const articleResources = useMemo(
         () => moreResources.filter((resource) => resource.type === 'article'),
         [],
     );
     const activeEmbedUrl = hoveredResource?.embedUrl;
+    const previewUrl =
+        activeEmbedUrl ??
+        (hoveredResource?.type === 'article' || hoveredResource?.type === 'docs'
+            ? hoveredResource.url
+            : undefined);
     const isPreviewLoading =
-        Boolean(activeEmbedUrl) && loadedEmbedUrl !== activeEmbedUrl;
+        Boolean(previewUrl) && loadedEmbedUrl !== previewUrl;
     const floatingModalStyle = useMemo<CSSProperties | undefined>(() => {
         if (typeof window === 'undefined' || isMobile) {
             return undefined;
@@ -190,9 +199,9 @@ export function MoreResourcesPage() {
 
     // Stop "Loading preview..." after 10s if iframe onLoad never fires (e.g. embed blocked)
     useEffect(() => {
-        if (!activeEmbedUrl || loadedEmbedUrl === activeEmbedUrl) return;
+        if (!previewUrl || loadedEmbedUrl === previewUrl) return;
         loadTimeoutRef.current = window.setTimeout(() => {
-            setLoadedEmbedUrl(activeEmbedUrl);
+            setLoadedEmbedUrl(previewUrl);
             loadTimeoutRef.current = null;
         }, 10000);
         return () => {
@@ -201,7 +210,7 @@ export function MoreResourcesPage() {
                 loadTimeoutRef.current = null;
             }
         };
-    }, [activeEmbedUrl, loadedEmbedUrl]);
+    }, [previewUrl, loadedEmbedUrl]);
 
     const warmPreview = useCallback((resource: ResourceLink) => {
         if (!resource.embedUrl || typeof document === 'undefined') return;
@@ -328,6 +337,14 @@ export function MoreResourcesPage() {
                             {renderResourceList(videoResources)}
                         </section>
                     )}
+                    {docResources.length > 0 && (
+                        <section className="space-y-3">
+                            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                                Docs
+                            </h3>
+                            {renderResourceList(docResources)}
+                        </section>
+                    )}
                     {articleResources.length > 0 && (
                         <section className="space-y-3">
                             <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)]">
@@ -355,7 +372,7 @@ export function MoreResourcesPage() {
                             </p>
                         </div>
                         <div className="resource-hover-floating-frame">
-                            {activeEmbedUrl ? (
+                            {previewUrl ? (
                                 <>
                                     {isPreviewLoading && (
                                         <div className="resource-preview-loading absolute inset-0 z-10 flex items-center justify-center text-sm text-[var(--text-secondary)]">
@@ -363,8 +380,8 @@ export function MoreResourcesPage() {
                                         </div>
                                     )}
                                     <iframe
-                                        key={activeEmbedUrl}
-                                        src={activeEmbedUrl}
+                                        key={previewUrl}
+                                        src={previewUrl}
                                         title={`Preview ${hoveredResource.label}`}
                                         className={`resource-preview-iframe w-full h-full ${isPreviewLoading ? '' : 'is-loaded'}`}
                                         loading="lazy"
@@ -385,15 +402,13 @@ export function MoreResourcesPage() {
                                                 window.clearTimeout(loadTimeoutRef.current);
                                                 loadTimeoutRef.current = null;
                                             }
-                                            setLoadedEmbedUrl(activeEmbedUrl);
+                                            setLoadedEmbedUrl(previewUrl);
                                         }}
                                     />
                                 </>
                             ) : (
                                 <div className="resource-preview-empty absolute inset-0 flex items-center justify-center text-sm text-[var(--text-secondary)] px-4 text-center">
-                                    {hoveredResource.type === 'article'
-                                        ? "Articles can't be previewed here. Open the link to read."
-                                        : 'Preview unavailable for this resource.'}
+                                    Preview unavailable for this resource.
                                 </div>
                             )}
                         </div>
