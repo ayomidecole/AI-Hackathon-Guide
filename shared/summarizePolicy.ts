@@ -1,10 +1,11 @@
-const OPENAI_CHAT_COMPLETIONS_URL = 'https://api.openai.com/v1/chat/completions';
+const OPENAI_CHAT_URL = 'https://api.openai.com/v1/chat/completions';
 const SUMMARY_MODEL = 'gpt-4o-mini';
 const MAX_PAGE_CHARS = 14_000;
 const FETCH_TIMEOUT_MS = 10_000;
 const ALLOWED_PROTOCOLS = ['https:', 'http:'];
+const SUMMARY_MAX_TOKENS = 50;
 
-const SUMMARY_SYSTEM_PROMPT = `You are a concise summarizer for developers. Summarize the following web page content in 2-4 short paragraphs. Focus on the main idea, key points, and why it matters to a developer. Use clear, scannable prose. Do not use bullet points unless the content is a list.`;
+const SUMMARY_SYSTEM_PROMPT = `Summarize the web page in 1–2 short sentences only (under 35 words). State the main idea. No bullets, no intro, no filler. Must fit in a small preview box without scrolling.`;
 
 export function validateSummaryUrl(
   url: string,
@@ -84,7 +85,7 @@ export async function* streamSummary(
     return;
   }
 
-  const response = await fetch(OPENAI_CHAT_COMPLETIONS_URL, {
+  const response = await fetch(OPENAI_CHAT_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -97,6 +98,7 @@ export async function* streamSummary(
         { role: 'user', content: page.text },
       ],
       stream: true,
+      max_completion_tokens: SUMMARY_MAX_TOKENS,
     }),
   });
 
@@ -114,28 +116,35 @@ export async function* streamSummary(
 
   const decoder = new TextDecoder();
   let buffer = '';
+  let yielded = false;
   try {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
+      const lines = buffer.split(/\r?\n/);
       buffer = lines.pop() ?? '';
       for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-          try {
-            const parsed = JSON.parse(data) as { choices?: Array<{ delta?: { content?: string } }> };
-            const content = parsed.choices?.[0]?.delta?.content;
-            if (typeof content === 'string' && content) yield content;
-          } catch {
-            // ignore parse errors for incomplete chunks
+        const trimmed = line.trim();
+        if (!trimmed.startsWith('data: ')) continue;
+        const data = trimmed.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const event = JSON.parse(data) as { choices?: Array<{ delta?: { content?: string } }> };
+          const content = event.choices?.[0]?.delta?.content;
+          if (typeof content === 'string' && content) {
+            yielded = true;
+            yield content;
           }
+        } catch {
+          // incomplete or invalid JSON chunk
         }
       }
     }
   } finally {
     reader.releaseLock();
+  }
+  if (!yielded) {
+    yield '[No summary generated]';
   }
 }

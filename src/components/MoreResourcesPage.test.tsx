@@ -106,7 +106,6 @@ describe('MoreResourcesPage', () => {
                 /Preview How To Be A World-Class Agentic Engineer/i,
             ),
         ).toBeInTheDocument();
-        expect(screen.getByText(/Open in new tab/i)).toBeInTheDocument();
         await waitFor(() => {
             expect(
                 screen.getByText(/Summarizing|\[Summary failed\]/i),

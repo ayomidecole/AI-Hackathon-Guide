@@ -233,7 +233,21 @@ export function MoreResourcesPage() {
                 const res = await fetch(`/api/summarize?url=${encodeURIComponent(url)}`, {
                     signal: controller.signal,
                 });
-                if (!res.ok || !res.body) {
+                if (!res.ok) {
+                    let msg = '[Summary unavailable]';
+                    try {
+                        const err = await res.json();
+                        if (typeof err?.error === 'string') {
+                            msg = `[${err.error}]`;
+                        }
+                    } catch {
+                        /* ignore */
+                    }
+                    setSummaryText(msg);
+                    setSummaryLoading(false);
+                    return;
+                }
+                if (!res.body) {
                     setSummaryText('[Summary unavailable]');
                     setSummaryLoading(false);
                     return;
@@ -247,7 +261,11 @@ export function MoreResourcesPage() {
                     acc += decoder.decode(value, { stream: true });
                     setSummaryText(acc);
                 }
-                summaryCacheRef.current[url] = acc;
+                if (!acc) {
+                    setSummaryText('[No summary generated]');
+                } else {
+                    summaryCacheRef.current[url] = acc;
+                }
             } catch (e) {
                 if ((e as Error).name !== 'AbortError') {
                     setSummaryText('[Summary failed]');
@@ -428,14 +446,6 @@ export function MoreResourcesPage() {
                             <p className="mt-1 text-sm font-semibold text-[var(--text-primary)] truncate">
                                 {hoveredResource.label}
                             </p>
-                            <a
-                                href={hoveredResource.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-2 inline-block text-xs font-medium text-[var(--accent)] hover:underline"
-                            >
-                                Open in new tab →
-                            </a>
                         </div>
                         <div className="resource-hover-floating-frame">
                             {previewUrl ? (
