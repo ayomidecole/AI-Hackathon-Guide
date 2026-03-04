@@ -57,6 +57,7 @@ export function MoreResourcesPage() {
     } | null>(null);
     const [loadedEmbedUrl, setLoadedEmbedUrl] = useState<string | null>(null);
     const hidePreviewTimeoutRef = useRef<number | null>(null);
+    const loadTimeoutRef = useRef<number | null>(null);
     const hoveredResource = useMemo(
         () =>
             moreResources.find(
@@ -181,8 +182,26 @@ export function MoreResourcesPage() {
             if (hidePreviewTimeoutRef.current !== null) {
                 window.clearTimeout(hidePreviewTimeoutRef.current);
             }
+            if (loadTimeoutRef.current !== null) {
+                window.clearTimeout(loadTimeoutRef.current);
+            }
         };
     }, []);
+
+    // Stop "Loading preview..." after 10s if iframe onLoad never fires (e.g. embed blocked)
+    useEffect(() => {
+        if (!activeEmbedUrl || loadedEmbedUrl === activeEmbedUrl) return;
+        loadTimeoutRef.current = window.setTimeout(() => {
+            setLoadedEmbedUrl(activeEmbedUrl);
+            loadTimeoutRef.current = null;
+        }, 10000);
+        return () => {
+            if (loadTimeoutRef.current !== null) {
+                window.clearTimeout(loadTimeoutRef.current);
+                loadTimeoutRef.current = null;
+            }
+        };
+    }, [activeEmbedUrl, loadedEmbedUrl]);
 
     const warmPreview = useCallback((resource: ResourceLink) => {
         if (!resource.embedUrl || typeof document === 'undefined') return;
@@ -226,6 +245,10 @@ export function MoreResourcesPage() {
 
     const scheduleHidePreview = useCallback(() => {
         clearHidePreviewTimeout();
+        if (loadTimeoutRef.current != null) {
+            window.clearTimeout(loadTimeoutRef.current);
+            loadTimeoutRef.current = null;
+        }
         hidePreviewTimeoutRef.current = window.setTimeout(() => {
             setHoveredResourceId(null);
             setPreviewAnchor(null);
@@ -348,19 +371,29 @@ export function MoreResourcesPage() {
                                         referrerPolicy="strict-origin-when-cross-origin"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                         allowFullScreen
-                                        onLoad={(event) =>
+                                        onLoad={(event) => {
+                                            if (loadTimeoutRef.current != null) {
+                                                window.clearTimeout(loadTimeoutRef.current);
+                                                loadTimeoutRef.current = null;
+                                            }
                                             setLoadedEmbedUrl(
                                                 event.currentTarget.src,
-                                            )
-                                        }
-                                        onError={() =>
-                                            setLoadedEmbedUrl(activeEmbedUrl)
-                                        }
+                                            );
+                                        }}
+                                        onError={() => {
+                                            if (loadTimeoutRef.current != null) {
+                                                window.clearTimeout(loadTimeoutRef.current);
+                                                loadTimeoutRef.current = null;
+                                            }
+                                            setLoadedEmbedUrl(activeEmbedUrl);
+                                        }}
                                     />
                                 </>
                             ) : (
-                                <div className="resource-preview-empty absolute inset-0 flex items-center justify-center text-sm text-[var(--text-secondary)]">
-                                    Preview unavailable for this resource.
+                                <div className="resource-preview-empty absolute inset-0 flex items-center justify-center text-sm text-[var(--text-secondary)] px-4 text-center">
+                                    {hoveredResource.type === 'article'
+                                        ? "Articles can't be previewed here. Open the link to read."
+                                        : 'Preview unavailable for this resource.'}
                                 </div>
                             )}
                         </div>
