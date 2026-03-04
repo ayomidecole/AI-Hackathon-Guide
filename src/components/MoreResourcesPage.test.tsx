@@ -92,7 +92,7 @@ describe('MoreResourcesPage', () => {
         });
     });
 
-    it('shows fallback preview text for article links without embed URLs', async () => {
+    it('shows summary panel for article links', async () => {
         const user = userEvent.setup();
         render(<MoreResourcesPage />);
 
@@ -106,9 +106,12 @@ describe('MoreResourcesPage', () => {
                 /Preview How To Be A World-Class Agentic Engineer/i,
             ),
         ).toBeInTheDocument();
-        expect(
-            screen.getByText(/Preview unavailable for this resource\./i),
-        ).toBeInTheDocument();
+        expect(screen.getByText(/Open in new tab/i)).toBeInTheDocument();
+        await waitFor(() => {
+            expect(
+                screen.getByText(/Summarizing|\[Summary failed\]/i),
+            ).toBeInTheDocument();
+        });
 
         await user.unhover(articleLink);
         await waitFor(() => {

@@ -102,7 +102,9 @@ describe('moreResources', () => {
 
         it('includes the article resource without a YouTube embed URL', () => {
             const articleResource = moreResources.find(
-                (r) => r.type === 'article',
+                (r) =>
+                    r.type === 'article' &&
+                    r.label === 'How To Be A World-Class Agentic Engineer',
             );
             expect(articleResource).toBeDefined();
             expect(articleResource?.label).toBe(

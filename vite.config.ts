@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { handleChatRequest, type ChatRequestBody } from './shared/chatPolicy'
+import { validateSummaryUrl, streamSummary } from './shared/summarizePolicy'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -25,6 +26,7 @@ export default defineConfig(({ mode }) => {
           'src/main.tsx',
           'src/test/**',
           'src/index.css',
+          'server/summarize.ts',
         ],
         thresholds: {
           lines: 80,
@@ -40,6 +42,39 @@ export default defineConfig(({ mode }) => {
         name: 'chat-api',
         configureServer(server) {
           server.middlewares.use(async (req, res, next) => {
+            if (req.method === 'GET' && req.url?.startsWith('/api/summarize')) {
+              try {
+                const q = req.url.includes('?') ? new URL(req.url, 'http://localhost').searchParams : null
+                const url = q?.get('url') ?? ''
+                const validation = validateSummaryUrl(url)
+                if (!validation.ok) {
+                  res.setHeader('Content-Type', 'application/json')
+                  res.statusCode = validation.status
+                  res.end(JSON.stringify({ error: validation.error }))
+                  return
+                }
+                const apiKey = process.env.OPENAI_API_KEY
+                if (!apiKey) {
+                  res.setHeader('Content-Type', 'application/json')
+                  res.statusCode = 500
+                  res.end(JSON.stringify({ error: 'OpenAI API key not configured' }))
+                  return
+                }
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+                res.setHeader('Cache-Control', 'no-store')
+                res.statusCode = 200
+                for await (const chunk of streamSummary(apiKey, url)) {
+                  res.write(chunk)
+                }
+                res.end()
+              } catch (err) {
+                console.error('[summarize]', err)
+                res.setHeader('Content-Type', 'application/json')
+                res.statusCode = 500
+                res.end(JSON.stringify({ error: 'Summary failed' }))
+              }
+              return
+            }
             if (req.method !== 'POST' || !req.url?.startsWith('/api/chat')) {
               return next()
             }

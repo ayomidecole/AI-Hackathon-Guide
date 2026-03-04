@@ -56,8 +56,12 @@ export function MoreResourcesPage() {
         bottom: number;
     } | null>(null);
     const [loadedEmbedUrl, setLoadedEmbedUrl] = useState<string | null>(null);
+    const [summaryText, setSummaryText] = useState('');
+    const [summaryLoading, setSummaryLoading] = useState(false);
     const hidePreviewTimeoutRef = useRef<number | null>(null);
     const loadTimeoutRef = useRef<number | null>(null);
+    const summaryAbortRef = useRef<AbortController | null>(null);
+    const summaryCacheRef = useRef<Record<string, string>>({});
     const hoveredResource = useMemo(
         () =>
             moreResources.find(
@@ -78,11 +82,9 @@ export function MoreResourcesPage() {
         [],
     );
     const activeEmbedUrl = hoveredResource?.embedUrl;
-    const previewUrl =
-        activeEmbedUrl ??
-        (hoveredResource?.type === 'article' || hoveredResource?.type === 'docs'
-            ? hoveredResource.url
-            : undefined);
+    const isArticleOrDoc =
+        hoveredResource?.type === 'article' || hoveredResource?.type === 'docs';
+    const previewUrl = activeEmbedUrl ?? undefined;
     const isPreviewLoading =
         Boolean(previewUrl) && loadedEmbedUrl !== previewUrl;
     const floatingModalStyle = useMemo<CSSProperties | undefined>(() => {
@@ -212,6 +214,56 @@ export function MoreResourcesPage() {
         };
     }, [previewUrl, loadedEmbedUrl]);
 
+    // Stream summary for articles/docs when hovered
+    useEffect(() => {
+        if (!hoveredResource || !isArticleOrDoc) return;
+        const url = hoveredResource.url;
+        const cached = summaryCacheRef.current[url];
+        if (cached) {
+            setSummaryText(cached);
+            setSummaryLoading(false);
+            return;
+        }
+        setSummaryText('');
+        setSummaryLoading(true);
+        const controller = new AbortController();
+        summaryAbortRef.current = controller;
+        (async () => {
+            try {
+                const res = await fetch(`/api/summarize?url=${encodeURIComponent(url)}`, {
+                    signal: controller.signal,
+                });
+                if (!res.ok || !res.body) {
+                    setSummaryText('[Summary unavailable]');
+                    setSummaryLoading(false);
+                    return;
+                }
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                let acc = '';
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    acc += decoder.decode(value, { stream: true });
+                    setSummaryText(acc);
+                }
+                summaryCacheRef.current[url] = acc;
+            } catch (e) {
+                if ((e as Error).name !== 'AbortError') {
+                    setSummaryText('[Summary failed]');
+                }
+            } finally {
+                setSummaryLoading(false);
+                if (summaryAbortRef.current === controller) {
+                    summaryAbortRef.current = null;
+                }
+            }
+        })();
+        return () => {
+            controller.abort();
+        };
+    }, [hoveredResource?.id, hoveredResource?.url, isArticleOrDoc]);
+
     const warmPreview = useCallback((resource: ResourceLink) => {
         if (!resource.embedUrl || typeof document === 'undefined') return;
         addHeadLink('prefetch', resource.embedUrl, { as: 'document' });
@@ -258,11 +310,17 @@ export function MoreResourcesPage() {
             window.clearTimeout(loadTimeoutRef.current);
             loadTimeoutRef.current = null;
         }
+        if (summaryAbortRef.current) {
+            summaryAbortRef.current.abort();
+            summaryAbortRef.current = null;
+        }
         hidePreviewTimeoutRef.current = window.setTimeout(() => {
             setHoveredResourceId(null);
             setPreviewAnchor(null);
             setPreviewLinkRect(null);
             setLoadedEmbedUrl(null);
+            setSummaryText('');
+            setSummaryLoading(false);
             hidePreviewTimeoutRef.current = null;
         }, 120);
     }, [clearHidePreviewTimeout]);
@@ -365,11 +423,19 @@ export function MoreResourcesPage() {
                     >
                         <div className="resource-hover-floating-header">
                             <p className="text-xs uppercase tracking-wider font-medium text-[var(--text-muted)]">
-                                Preview
+                                {isArticleOrDoc ? 'Summary' : 'Preview'}
                             </p>
                             <p className="mt-1 text-sm font-semibold text-[var(--text-primary)] truncate">
                                 {hoveredResource.label}
                             </p>
+                            <a
+                                href={hoveredResource.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-2 inline-block text-xs font-medium text-[var(--accent)] hover:underline"
+                            >
+                                Open in new tab →
+                            </a>
                         </div>
                         <div className="resource-hover-floating-frame">
                             {previewUrl ? (
@@ -406,6 +472,18 @@ export function MoreResourcesPage() {
                                         }}
                                     />
                                 </>
+                            ) : isArticleOrDoc ? (
+                                <div className="absolute inset-0 overflow-auto p-4 text-sm text-[var(--text-secondary)]">
+                                    {summaryLoading && !summaryText ? (
+                                        <p className="text-[var(--text-muted)]">
+                                            Summarizing...
+                                        </p>
+                                    ) : (
+                                        <p className="whitespace-pre-wrap leading-relaxed">
+                                            {summaryText}
+                                        </p>
+                                    )}
+                                </div>
                             ) : (
                                 <div className="resource-preview-empty absolute inset-0 flex items-center justify-center text-sm text-[var(--text-secondary)] px-4 text-center">
                                     Preview unavailable for this resource.
