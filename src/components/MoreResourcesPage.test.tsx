@@ -51,6 +51,17 @@ describe('MoreResourcesPage', () => {
             'href',
             'https://x.com/systematicls/status/2028814227004395561?s=46',
         );
+        const cursorAutomationsLinks = screen.getAllByRole('link', {
+            name: /^Cursor automations$/i,
+        });
+        const cursorAutomationArticleLink = cursorAutomationsLinks.find(
+            (link) => link.getAttribute('href') === 'https://cursor.com/blog/automations',
+        );
+        expect(cursorAutomationArticleLink).toBeDefined();
+        expect(cursorAutomationArticleLink).toHaveAttribute(
+            'href',
+            'https://cursor.com/blog/automations',
+        );
     });
 
     it('shows and hides floating preview modal on hover', async () => {

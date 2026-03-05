@@ -92,6 +92,30 @@ describe('moreResources', () => {
     });
 
     describe('moreResources array', () => {
+        it('includes Cursor automations as the second video item', () => {
+            const videoResources = moreResources.filter((r) => r.type === 'video');
+            expect(videoResources[1]).toMatchObject({
+                id: 'cursor-automations',
+                label: 'Cursor automations',
+                url: 'https://youtu.be/uKetgY5FB6s?si=o0F5Aoa7kuJpZKu2',
+            });
+            expect(videoResources[1]?.embedUrl).toBe(
+                'https://www.youtube-nocookie.com/embed/uKetgY5FB6s',
+            );
+        });
+
+        it('includes Cursor automations as the second article item', () => {
+            const articleResources = moreResources.filter(
+                (r) => r.type === 'article',
+            );
+            expect(articleResources[1]).toMatchObject({
+                id: 'cursor-automation',
+                label: 'Cursor automations',
+                url: 'https://cursor.com/blog/automations',
+            });
+            expect(articleResources[1]?.embedUrl).toBeUndefined();
+        });
+
         it('exports resources with embedUrl for YouTube links', () => {
             expect(moreResources.length).toBeGreaterThan(0);
             const videoResource = moreResources.find((r) => r.type === 'video');
