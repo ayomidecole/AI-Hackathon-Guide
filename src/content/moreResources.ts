@@ -72,6 +72,12 @@ const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
         url: 'https://www.youtube.com/watch?v=XOtHjA8THCw',
     },
     {
+        id: 'cursor-automations',
+        type: 'video',
+        label: 'Cursor automations',
+        url: 'https://youtu.be/uKetgY5FB6s?si=o0F5Aoa7kuJpZKu2',
+    },
+    {
         id: 'claude-agent-tips-explained',
         type: 'video',
         label: 'Claude agent tips explained',
