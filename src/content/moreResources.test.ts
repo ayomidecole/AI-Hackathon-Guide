@@ -104,6 +104,18 @@ describe('moreResources', () => {
             );
         });
 
+        it('includes Cursor automation as the second article item', () => {
+            const articleResources = moreResources.filter(
+                (r) => r.type === 'article',
+            );
+            expect(articleResources[1]).toMatchObject({
+                id: 'cursor-automation',
+                label: 'Cursor automation',
+                url: 'https://cursor.com/blog/automations',
+            });
+            expect(articleResources[1]?.embedUrl).toBeUndefined();
+        });
+
         it('exports resources with embedUrl for YouTube links', () => {
             expect(moreResources.length).toBeGreaterThan(0);
             const videoResource = moreResources.find((r) => r.type === 'video');

@@ -51,6 +51,13 @@ describe('MoreResourcesPage', () => {
             'href',
             'https://x.com/systematicls/status/2028814227004395561?s=46',
         );
+        const cursorAutomationLink = screen.getByRole('link', {
+            name: /^Cursor automation$/i,
+        });
+        expect(cursorAutomationLink).toHaveAttribute(
+            'href',
+            'https://cursor.com/blog/automations',
+        );
     });
 
     it('shows and hides floating preview modal on hover', async () => {

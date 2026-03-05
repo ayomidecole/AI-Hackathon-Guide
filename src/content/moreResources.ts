@@ -120,6 +120,12 @@ const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
         url: 'https://cursor.com/blog/third-era',
     },
     {
+        id: 'cursor-automation',
+        type: 'article',
+        label: 'Cursor automation',
+        url: 'https://cursor.com/blog/automations',
+    },
+    {
         id: 'systematicls-article',
         type: 'article',
         label: 'How To Be A World-Class Agentic Engineer',
