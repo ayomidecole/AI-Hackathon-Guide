@@ -104,13 +104,13 @@ describe('moreResources', () => {
             );
         });
 
-        it('includes Cursor automation as the second article item', () => {
+        it('includes Cursor automations as the second article item', () => {
             const articleResources = moreResources.filter(
                 (r) => r.type === 'article',
             );
             expect(articleResources[1]).toMatchObject({
                 id: 'cursor-automation',
-                label: 'Cursor automation',
+                label: 'Cursor automations',
                 url: 'https://cursor.com/blog/automations',
             });
             expect(articleResources[1]?.embedUrl).toBeUndefined();

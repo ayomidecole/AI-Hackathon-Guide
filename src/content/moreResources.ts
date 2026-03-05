@@ -122,7 +122,7 @@ const baseResourceLinks: Omit<ResourceLink, 'embedUrl'>[] = [
     {
         id: 'cursor-automation',
         type: 'article',
-        label: 'Cursor automation',
+        label: 'Cursor automations',
         url: 'https://cursor.com/blog/automations',
     },
     {

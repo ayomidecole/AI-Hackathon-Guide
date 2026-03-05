@@ -51,10 +51,14 @@ describe('MoreResourcesPage', () => {
             'href',
             'https://x.com/systematicls/status/2028814227004395561?s=46',
         );
-        const cursorAutomationLink = screen.getByRole('link', {
-            name: /^Cursor automation$/i,
+        const cursorAutomationsLinks = screen.getAllByRole('link', {
+            name: /^Cursor automations$/i,
         });
-        expect(cursorAutomationLink).toHaveAttribute(
+        const cursorAutomationArticleLink = cursorAutomationsLinks.find(
+            (link) => link.getAttribute('href') === 'https://cursor.com/blog/automations',
+        );
+        expect(cursorAutomationArticleLink).toBeDefined();
+        expect(cursorAutomationArticleLink).toHaveAttribute(
             'href',
             'https://cursor.com/blog/automations',
         );
