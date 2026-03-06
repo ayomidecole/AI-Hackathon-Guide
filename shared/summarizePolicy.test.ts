@@ -59,6 +59,12 @@ describe('getPageText', () => {
         expect(result).toMatchObject({ ok: false, error: 'Failed to fetch URL' });
     });
 
+    it('returns error when fetch throws non-AbortError', async () => {
+        vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('CORS')));
+        const result = await getPageText('https://example.com');
+        expect(result).toMatchObject({ ok: false, error: 'Failed to fetch URL' });
+    });
+
     it('returns error when response is not ok', async () => {
         vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 404 }));
         const result = await getPageText('https://example.com');
@@ -171,5 +177,47 @@ describe('streamSummary', () => {
         }
         expect(chunks).toContain('Hi ');
         expect(chunks).toContain('there');
+    });
+
+    it('yields no summary when response has no body', async () => {
+        (globalThis.fetch as ReturnType<typeof vi.fn>)
+            .mockResolvedValueOnce({
+                ok: true,
+                headers: new Headers({ 'content-type': 'text/html' }),
+                text: () => Promise.resolve('<body>' + 'x'.repeat(60) + '</body>'),
+            })
+            .mockResolvedValueOnce({ ok: true, body: null });
+        const chunks: string[] = [];
+        for await (const chunk of streamSummary('key', 'https://example.com')) {
+            chunks.push(chunk);
+        }
+        expect(chunks.join('')).toContain('Summary failed');
+    });
+
+    it('yields no summary generated when stream has no content', async () => {
+        (globalThis.fetch as ReturnType<typeof vi.fn>)
+            .mockResolvedValueOnce({
+                ok: true,
+                headers: new Headers({ 'content-type': 'text/html' }),
+                text: () => Promise.resolve('<body>' + 'x'.repeat(60) + '</body>'),
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                body: {
+                    getReader: () => ({
+                        read: () =>
+                            Promise.resolve({
+                                done: true,
+                                value: undefined,
+                            }),
+                        releaseLock: () => {},
+                    }),
+                },
+            });
+        const chunks: string[] = [];
+        for await (const chunk of streamSummary('key', 'https://example.com')) {
+            chunks.push(chunk);
+        }
+        expect(chunks).toContain('[No summary generated]');
     });
 });

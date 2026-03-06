@@ -51,6 +51,13 @@ describe('ChatPanel', () => {
     expect(input).toHaveValue('I want to build a todo app')
   })
 
+  it('does not send when input is empty', async () => {
+    const user = userEvent.setup()
+    render(<ChatPanel isOpen={true} onClose={vi.fn()} />)
+    await user.click(screen.getByRole('button', { name: /Send message/i }))
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
   it('sends message and shows assistant reply when fetch succeeds', async () => {
     const user = userEvent.setup()
     render(<ChatPanel isOpen={true} onClose={vi.fn()} />)
@@ -87,6 +94,40 @@ describe('ChatPanel', () => {
     await user.type(screen.getByPlaceholderText(/Type your message/), 'Hi')
     await user.click(screen.getByRole('button', { name: /Send message/i }))
     expect(await screen.findByText('API error')).toBeInTheDocument()
+  })
+
+  it('shows fallback error when fetch returns not ok without error message', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({
+          ok: false,
+          json: () => Promise.resolve({}),
+        } as Response)
+      )
+    )
+    render(<ChatPanel isOpen={true} onClose={vi.fn()} />)
+    await user.type(screen.getByPlaceholderText(/Type your message/), 'Hi')
+    await user.click(screen.getByRole('button', { name: /Send message/i }))
+    expect(await screen.findByText(/Failed to get response/)).toBeInTheDocument()
+  })
+
+  it('shows no response received when fetch returns empty choices', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ choices: [] }),
+        } as Response)
+      )
+    )
+    render(<ChatPanel isOpen={true} onClose={vi.fn()} />)
+    await user.type(screen.getByPlaceholderText(/Type your message/), 'Hi')
+    await user.click(screen.getByRole('button', { name: /Send message/i }))
+    expect(await screen.findByText(/No response received/)).toBeInTheDocument()
   })
 
   it('sends context in request body when toolContext is provided', async () => {

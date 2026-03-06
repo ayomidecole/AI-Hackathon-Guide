@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { act } from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 
@@ -62,6 +62,16 @@ describe('App', () => {
     expect(screen.getByRole('dialog', { name: /AI chat/i })).toBeInTheDocument()
   })
 
+  it('closes chat when clicking overlay', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /Suggest a stack/i }))
+    expect(screen.getByRole('dialog', { name: /AI chat/i })).toBeInTheDocument()
+    const overlay = screen.getByRole('dialog', { name: /AI chat/i })
+    await user.click(overlay)
+    expect(screen.queryByRole('dialog', { name: /AI chat/i })).not.toBeInTheDocument()
+  })
+
   it('uses light theme when matchMedia prefers light and no stored theme', () => {
     mockLocalStorage.clear()
     vi.stubGlobal('matchMedia', vi.fn().mockImplementation((query: string) => ({
@@ -119,4 +129,51 @@ describe('App', () => {
     expect(window.location.pathname).toBe('/')
   })
 
+  it('navigates to next section with Cmd+Down', () => {
+    render(<App />)
+    expect(screen.getByRole('button', { name: /Development tools/i })).toBeInTheDocument()
+
+    fireEvent.keyDown(document, { key: 'ArrowDown', metaKey: true })
+
+    expect(screen.getByRole('heading', { name: /Supabase/i })).toBeInTheDocument()
+  })
+
+  it('navigates to previous section with Cmd+Up', () => {
+    render(<App />)
+    fireEvent.keyDown(document, { key: 'ArrowDown', metaKey: true })
+    expect(screen.getByRole('heading', { name: /Supabase/i })).toBeInTheDocument()
+
+    fireEvent.keyDown(document, { key: 'ArrowUp', metaKey: true })
+
+    expect(screen.getByRole('heading', { name: /Cursor/i })).toBeInTheDocument()
+  })
+
+  it('does not navigate sections with Cmd+Down on More resources page', () => {
+    window.history.pushState({}, '', '/more-resources')
+    render(<App />)
+    expect(screen.getByRole('heading', { name: /More resources/i })).toBeInTheDocument()
+
+    fireEvent.keyDown(document, { key: 'ArrowDown', metaKey: true })
+
+    expect(screen.getByRole('heading', { name: /More resources/i })).toBeInTheDocument()
+  })
+
+  it('does not navigate sections when Cmd+Left is pressed', () => {
+    render(<App />)
+    expect(screen.getByRole('heading', { name: /Cursor/i })).toBeInTheDocument()
+    fireEvent.keyDown(document, { key: 'ArrowLeft', metaKey: true })
+    expect(screen.getByRole('heading', { name: /Cursor/i })).toBeInTheDocument()
+  })
+
+  it('does not navigate sections with Cmd+Down when focused on chat input', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /Suggest a stack/i }))
+    const textarea = screen.getByPlaceholderText(/Type your message/i)
+    textarea.focus()
+
+    fireEvent.keyDown(textarea, { key: 'ArrowDown', metaKey: true })
+
+    expect(screen.getByRole('heading', { name: /Cursor/i })).toBeInTheDocument()
+  })
 })

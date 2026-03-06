@@ -133,6 +133,50 @@ describe('MoreResourcesPage', () => {
         });
     });
 
+    it('displays streamed summary when fetch succeeds', async () => {
+        const user = userEvent.setup();
+        let readCount = 0;
+        vi.stubGlobal(
+            'fetch',
+            vi.fn((url: string) => {
+                if (typeof url === 'string' && url.includes('/api/summarize')) {
+                    return Promise.resolve({
+                        ok: true,
+                        body: {
+                            getReader: () => ({
+                                read: () => {
+                                    readCount++;
+                                    return Promise.resolve(
+                                        readCount === 1
+                                            ? {
+                                                  done: false,
+                                                  value: new TextEncoder().encode(
+                                                      'A great article about agentic engineering.',
+                                                  ),
+                                              }
+                                            : { done: true, value: undefined },
+                                    );
+                                },
+                                releaseLock: () => {},
+                            }),
+                        },
+                    } as Response);
+                }
+                return Promise.reject(new Error('Unexpected fetch'));
+            }),
+        );
+        render(<MoreResourcesPage />);
+        const docLink = screen.getByRole('link', {
+            name: /Agent Skills — Overview/i,
+        });
+        await user.hover(docLink);
+        await waitFor(() => {
+            expect(
+                screen.getByText(/A great article about agentic engineering/i),
+            ).toBeInTheDocument();
+        });
+    });
+
     it('keeps modal visible while hovering the modal itself', async () => {
         const user = userEvent.setup();
         render(<MoreResourcesPage />);

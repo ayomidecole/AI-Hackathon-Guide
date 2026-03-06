@@ -67,6 +67,39 @@ function App() {
         };
     }, []);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (view !== 'home') return;
+            const mod = e.metaKey || e.ctrlKey;
+            if (!mod) return;
+            if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+            const target = e.target as Node;
+            if (
+                target &&
+                typeof (target as HTMLElement).closest === 'function' &&
+                (target as HTMLElement).closest('input, textarea, [contenteditable="true"]')
+            ) {
+                return;
+            }
+            const idx = sections.findIndex((s) => s.id === openSectionId);
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                e.stopPropagation();
+                const nextIdx = idx < 0 ? 0 : (idx + 1) % sections.length;
+                setOpenSectionId(sections[nextIdx].id);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                e.stopPropagation();
+                const prevIdx =
+                    idx <= 0 ? sections.length - 1 : (idx - 1 + sections.length) % sections.length;
+                setOpenSectionId(sections[prevIdx].id);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown, { capture: true });
+        return () =>
+            window.removeEventListener('keydown', handleKeyDown, { capture: true });
+    }, [view, openSectionId]);
+
     const toggleSection = (id: string) => {
         setOpenSectionId((prev) => (prev === id ? null : id));
     };

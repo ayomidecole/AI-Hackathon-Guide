@@ -15,6 +15,13 @@ describe('moreResources', () => {
             );
         });
 
+        it('extracts video id from youtu.be with path only', () => {
+            const result = getYouTubeEmbedUrl('https://youtu.be/videoid');
+            expect(result).toBe(
+                'https://www.youtube-nocookie.com/embed/videoid',
+            );
+        });
+
         it('extracts video id from www.youtu.be', () => {
             const result = getYouTubeEmbedUrl('https://www.youtu.be/xyz789');
             expect(result).toBe(
@@ -88,6 +95,27 @@ describe('moreResources', () => {
                 'https://www.youtube.com/watch?v=q&t=1h',
             );
             expect(result).toContain('start=3600');
+        });
+
+        it('omits start when t= is empty', () => {
+            const result = getYouTubeEmbedUrl(
+                'https://www.youtube.com/watch?v=q&t=',
+            );
+            expect(result).not.toContain('start=');
+        });
+
+        it('omits start when t= is invalid format', () => {
+            const result = getYouTubeEmbedUrl(
+                'https://www.youtube.com/watch?v=q&t=xyz',
+            );
+            expect(result).not.toContain('start=');
+        });
+
+        it('omits start when t= parses to zero', () => {
+            const result = getYouTubeEmbedUrl(
+                'https://www.youtube.com/watch?v=q&t=0h0m0s',
+            );
+            expect(result).not.toContain('start=');
         });
     });
 
