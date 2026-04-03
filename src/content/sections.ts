@@ -164,6 +164,33 @@ export const sections: Section[] = [
                 ],
             },
             {
+                id: 'replit-agent-4-announcement',
+                name: 'Replit agent 4 announcement',
+                tagline: 'Official Replit update video',
+                description:
+                    'Announcement video for Replit Agent 4 with latest updates and product direction.',
+                bullets: [
+                    'Agent 4 feature overview',
+                    'Product announcement',
+                    'Official video update',
+                ],
+                url: 'https://youtu.be/-2xHmkpmCBM',
+                detailsVideo: {
+                    title: 'Replit agent 4 announcement',
+                    embedUrl: 'https://www.youtube.com/embed/-2xHmkpmCBM',
+                    watchUrl: 'https://youtu.be/-2xHmkpmCBM',
+                },
+                detailsSections: [
+                    {
+                        heading: 'What this includes',
+                        items: [
+                            'High-level overview of Replit Agent 4 and how it fits into AI-assisted development workflows.',
+                            'Product announcement details and latest feature direction from Replit.',
+                        ],
+                    },
+                ],
+            },
+            {
                 id: 'claude-code',
                 name: 'Claude Code',
                 tagline: "Anthropic's coding assistant",
