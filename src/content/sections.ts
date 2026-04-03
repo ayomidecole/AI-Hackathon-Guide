@@ -135,9 +135,9 @@ export const sections: Section[] = [
                     url: 'https://docs.replit.com/tutorials/effective-prompting',
                 },
                 detailsVideo: {
-                    title: 'Watch: Replit walkthrough',
-                    embedUrl: 'https://www.youtube.com/embed/TAXRZyGV1Dw?start=42',
-                    watchUrl: 'https://www.youtube.com/watch?v=TAXRZyGV1Dw&t=42s',
+                    title: 'Replit agent 4 announcement',
+                    embedUrl: 'https://www.youtube.com/embed/-2xHmkpmCBM',
+                    watchUrl: 'https://youtu.be/-2xHmkpmCBM',
                 },
                 detailsSections: [
                     {
