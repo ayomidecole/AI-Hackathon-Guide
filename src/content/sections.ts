@@ -135,9 +135,9 @@ export const sections: Section[] = [
                     url: 'https://docs.replit.com/tutorials/effective-prompting',
                 },
                 detailsVideo: {
-                    title: 'Replit agent 4 announcement',
-                    embedUrl: 'https://www.youtube.com/embed/-2xHmkpmCBM',
-                    watchUrl: 'https://youtu.be/-2xHmkpmCBM',
+                    title: 'Watch: Replit walkthrough',
+                    embedUrl: 'https://www.youtube.com/embed/TAXRZyGV1Dw?start=42',
+                    watchUrl: 'https://www.youtube.com/watch?v=TAXRZyGV1Dw&t=42s',
                 },
                 detailsSections: [
                     {
@@ -159,6 +159,33 @@ export const sections: Section[] = [
                         items: [
                             'Use Replit Auth for authentication; validate user input; secure API endpoints with rate limiting.',
                             'Never commit secrets—use the Secrets manager and keep credentials out of version control.',
+                        ],
+                    },
+                ],
+            },
+            {
+                id: 'replit-agent-4-announcement',
+                name: 'Replit agent 4 announcement',
+                tagline: 'Official Replit update video',
+                description:
+                    'Announcement video for Replit Agent 4 with latest updates and product direction.',
+                bullets: [
+                    'Agent 4 feature overview',
+                    'Product announcement',
+                    'Official video update',
+                ],
+                url: 'https://youtu.be/-2xHmkpmCBM',
+                detailsVideo: {
+                    title: 'Replit agent 4 announcement',
+                    embedUrl: 'https://www.youtube.com/embed/-2xHmkpmCBM',
+                    watchUrl: 'https://youtu.be/-2xHmkpmCBM',
+                },
+                detailsSections: [
+                    {
+                        heading: 'What this includes',
+                        items: [
+                            'High-level overview of Replit Agent 4 and how it fits into AI-assisted development workflows.',
+                            'Product announcement details and latest feature direction from Replit.',
                         ],
                     },
                 ],
